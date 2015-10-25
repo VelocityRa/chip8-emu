@@ -1,4 +1,9 @@
+#if	 _MSC_VER > 1000
 #pragma once
+#endif
+
+#ifndef MEMORY_H
+#define MEMORY_H
 
 namespace mem
 {
@@ -40,3 +45,4 @@ namespace mem
 
 } //namespace mem
 
+#endif
