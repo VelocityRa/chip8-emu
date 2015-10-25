@@ -74,6 +74,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>\</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -82,6 +83,7 @@
     <LinkIncremental>false</LinkIncremental>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
+    <TargetName>\</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -162,21 +164,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="cpu.cpp" />
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\cpu.cpp" />
+    <ClCompile Include="src\main.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderOutputFile>
     </ClCompile>
-    <ClCompile Include="memory.cpp" />
+    <ClCompile Include="src\memory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\fonts\Minecraftia-Regular.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cpu.h" />
-    <ClInclude Include="memory.h" />
+    <ClInclude Include="src\cpu.h" />
+    <ClInclude Include="src\memory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\cpu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="memory.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cpu.cpp">
+    <ClCompile Include="src\memory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -31,10 +31,10 @@
     </Font>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="memory.h">
+    <ClInclude Include="src\cpu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cpu.h">
+    <ClInclude Include="src\memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
