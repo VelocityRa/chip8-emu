@@ -2,11 +2,7 @@
 
 namespace cpu
 {
-	
-	void initialize()
-	{
-
-	}
-
-
+void initialize()
+{
+}
 }

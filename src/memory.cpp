@@ -11,38 +11,38 @@ Chip 8's memory map:
 //Go to the header for details on the variables here
 namespace mem
 {
-	//Clean all the memory
-	void initialize()
-	{
-		auto
+//Clean all the memory
+void initialize()
+{
+	auto
 		opcode = new unsigned short();
 
-		unsigned char*
-		memory[4096] = { 0 };
+	unsigned char*
+		memory[4096] = {0};
 
-		unsigned char*
-		V[16] = { 0 };
+	unsigned char
+		V[16] = {0};
 
-		auto
+	auto
 		I = new unsigned short();
 
-		auto
+	auto
 		pc = new unsigned short();
 
-		unsigned char*
-		pixels[64 * 32] = { 0 };
+	unsigned char*
+		pixels[64 * 32] = {0};
 
-		auto
+	auto
 		delay_timer = new unsigned char();
-		auto
+	auto
 		sound_timer = new unsigned char();
 
-		unsigned short*
-		stack[16] = { 0 };
-		auto
+	unsigned short*
+		stack[16] = {0};
+	auto
 		sp = new unsigned short();
 
-		unsigned char* key[16] = { 0 };
-
-	}
+	unsigned char* key[16] = {0};
+}
 } //namespace mem
+
