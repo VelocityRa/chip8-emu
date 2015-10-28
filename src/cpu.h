@@ -5,9 +5,6 @@
 #ifndef CPU_H
 #define CPU_H
 
-namespace cpu
-{
-void initialize();
-}
+
 
 #endif

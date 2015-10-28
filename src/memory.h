@@ -5,10 +5,6 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
-namespace mem
-{
-void initialize();
-
 //Current opcode
 extern unsigned short* opcode;
 
@@ -16,11 +12,11 @@ extern unsigned short* opcode;
 extern unsigned char* memory[4096];
 
 //15 registers + 1 carry flag
-extern unsigned char V[16];
+extern unsigned char* V[16];
 
 //Index register
 extern unsigned short* I;
-
+  
 //Program counter
 extern unsigned short* pc;
 
@@ -41,6 +37,5 @@ extern unsigned short* sp;
 
 //State of the keypad
 extern unsigned char* key[16];
-} //namespace mem
 
 #endif

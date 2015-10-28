@@ -3,7 +3,6 @@
 #include <string>
 #include <iomanip>
 
-
 #include "cpu.h"
 #include "memory.h"
 
@@ -19,6 +18,7 @@
 #define W WIDTH_PIXELS * RES_MULT
 
 #ifdef _DEBUG
+#include <assert.h>
 auto isDebug = true;
 #else
 auto isDebug = false;
@@ -37,7 +37,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(W, H), "Chip-8 Emulator",
 	                        sf::Style::Titlebar | sf::Style::Close,
 	                        settings);
-	window.setVerticalSyncEnabled(true);
+	window.setFramerateLimit(60);
 
 	//Load a pixely font
 	sf::Font mc_font;
@@ -49,14 +49,6 @@ int main()
 
 	sf::Text debugText;
 	sf::Text regText;
-
-	//Initialize the emulator's modules
-	mem::initialize();
-	//cpu::initialize();
-
-	//Test registers, actual ones are V[16]
-	unsigned char
-		V2[16] = {0xDE, 0xAD, 0xBE, 0xEEF};
 
 	if (isDebug)
 	{
@@ -74,6 +66,8 @@ int main()
 	std::ostringstream out;
 	out << std::hex << std::setfill('0') << std::uppercase;
 
+	V[0];
+
 	//Main Loop
 	while (window.isOpen())
 	{
@@ -84,7 +78,7 @@ int main()
 		for (auto i = 0; i < 16; i++)
 		{
 			out << "V" << i << "="
-				<< std::setw(2) << int(V2[i]) << "\n";
+				<< std::setw(2) << int(V[i]) << "\n";
 			replaceText(&regText, out.str());
 		}
 
