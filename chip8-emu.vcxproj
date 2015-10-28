@@ -74,7 +74,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>\</TargetName>
+    <TargetName>chip8-emu</TargetName>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -83,7 +84,8 @@
     <LinkIncremental>false</LinkIncremental>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <TargetName>\</TargetName>
+    <TargetName>chip8-emu</TargetName>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -164,21 +166,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\cpu.cpp" />
+    <ClCompile Include="src\chip8-cpu.cpp" />
     <ClCompile Include="src\main.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderOutputFile>
     </ClCompile>
-    <ClCompile Include="src\memory.cpp" />
+    <ClCompile Include="src\chip8-memory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\fonts\Minecraftia-Regular.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\cpu.h" />
-    <ClInclude Include="src\memory.h" />
+    <ClInclude Include="src\chip8-cpu.h" />
+    <ClInclude Include="src\chip8-memory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
