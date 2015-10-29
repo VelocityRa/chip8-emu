@@ -6,7 +6,7 @@
 
 void chip8::initialize() const
 {
-	initMem();
+	mem::initMem();
 
 }
 
@@ -16,7 +16,7 @@ int chip8::loadGame(const char* name) const
 	std::streamsize size = game.tellg();
 	game.seekg(0, std::ios::beg);
 
-	game.read(reinterpret_cast<char*>(memory) + 512, size);
+	game.read(reinterpret_cast<char*>(mem::memory) + 512, size);
 
 	return game.gcount();
 }

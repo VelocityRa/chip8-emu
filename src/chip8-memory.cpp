@@ -1,4 +1,5 @@
 #include "chip8-memory.h"
+#include <algorithm>
 
 /*
 Chip 8's memory map:
@@ -10,38 +11,40 @@ Chip 8's memory map:
 
 //Go to the header for details on the variables here
 
+namespace mem
+{
 
-unsigned short	opcode;
-unsigned char	memory[4096];
-unsigned char	V[16];
-unsigned short	I;
-unsigned short	pc;
-unsigned char	pixels[64 * 32];
-unsigned char	delay_timer;
-unsigned char	sound_timer;
-unsigned short	stack[16];
-unsigned short	sp;
-unsigned char	key[16];
+	unsigned char	memory[4096],
+					V[16],
+					key[16],
+					pixels[64 * 32],
+					delay_timer,
+					sound_timer;
 
-//Initialize everything
-void initMem() {
+	unsigned short	stack[16],
+					sp,
+					opcode,
+					I,
+					pc;
 
-	opcode = *new unsigned short();
 
-	memory[4096] = { 0 };
+	//Initialize everything
+	void initMem() {
 
-	V[16] = { 0 };
+		// Use fill_n instead of array[x] = { 0 }
+		// to prevent buffer overrun
+		std::fill_n(memory, 4096, 0);
+		std::fill_n(V, 16, 0);
+		std::fill_n(pixels, 64 * 32, 0);
+		std::fill_n(stack, 16, 0);
+		std::fill_n(key, 16, 0);
 
-	I = *new unsigned short();
-	pc = *new unsigned short();
+		opcode,
+		I,
+		pc,
+		delay_timer,
+		sound_timer,
+		sp = 0;
+	}
 
-	pixels[64 * 32] = { 0 };
-
-	delay_timer = *new unsigned char();
-	sound_timer = *new unsigned char();
-
-	stack[16] = { 0 };
-	sp = *new unsigned short();
-
-	key[16] = { 0 };
 }

@@ -151,7 +151,7 @@ static void updRegText(std::ostringstream* ss, sf::Text* regText)
 	for (auto i = 0; i < 16; i++)
 	{
 		*ss << "V" << i << "="
-			<< std::setw(2) << int(V[i]) % 256 << "\n";
+			<< std::setw(2) << int(mem::V[i]) % 256 << "\n";
 		replaceText(regText, ss->str());
 	}
 }
