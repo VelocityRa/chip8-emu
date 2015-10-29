@@ -10,34 +10,38 @@ Chip 8's memory map:
 
 //Go to the header for details on the variables here
 
-//Initialize everything
 
-unsigned short
+unsigned short	opcode;
+unsigned char	memory[4096];
+unsigned char	V[16];
+unsigned short	I;
+unsigned short	pc;
+unsigned char	pixels[64 * 32];
+unsigned char	delay_timer;
+unsigned char	sound_timer;
+unsigned short	stack[16];
+unsigned short	sp;
+unsigned char	key[16];
+
+//Initialize everything
+void initMem() {
+
 	opcode = *new unsigned short();
 
-unsigned char
-	memory[4096] = {0};
+	memory[4096] = { 0 };
 
-unsigned char
-	V[16] = {0};
+	V[16] = { 0 };
 
-unsigned short
 	I = *new unsigned short();
-unsigned short
 	pc = *new unsigned short();
 
-unsigned char
-	pixels[64 * 32] = {0};
+	pixels[64 * 32] = { 0 };
 
-unsigned char
 	delay_timer = *new unsigned char();
-unsigned char
 	sound_timer = *new unsigned char();
 
-unsigned short
-	stack[16] = {0};
-unsigned short
+	stack[16] = { 0 };
 	sp = *new unsigned short();
 
-unsigned char
-	key[16] = {0};
+	key[16] = { 0 };
+}

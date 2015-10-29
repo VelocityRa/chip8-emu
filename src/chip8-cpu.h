@@ -8,9 +8,11 @@
 class chip8
 {
 private:
-
 public:
+	bool drawFlag = false;
+
 	void initialize() const;
-	int loadGame(const char* name) const;
+	int  loadGame(const char* name) const;
+	void emulateCycle();
 };
 #endif

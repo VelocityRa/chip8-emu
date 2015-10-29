@@ -5,6 +5,8 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
+extern void initMem();
+
 //Current opcode
 extern unsigned short	opcode;
 

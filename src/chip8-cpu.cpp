@@ -6,6 +6,8 @@
 
 void chip8::initialize() const
 {
+	initMem();
+
 }
 
 int chip8::loadGame(const char* name) const
@@ -17,4 +19,9 @@ int chip8::loadGame(const char* name) const
 	game.read(reinterpret_cast<char*>(memory) + 512, size);
 
 	return game.gcount();
+}
+
+void chip8::emulateCycle()
+{
+
 }
