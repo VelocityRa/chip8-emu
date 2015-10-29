@@ -4,9 +4,19 @@
 #include "chip8-memory.h"
 
 
-void chip8::initialize() const
+void chip8::initCpu()
 {
-	mem::initMem();
+	std::fill_n(stack, 16, 0);
+	opcode,
+	I,
+	pc,
+	sp = 0;
+}
+
+void chip8::initialize()
+{
+	initMem();
+	initCpu();
 
 }
 

@@ -13,38 +13,25 @@ Chip 8's memory map:
 
 namespace mem
 {
-
 	unsigned char	memory[4096],
-					V[16],
-					key[16],
-					pixels[64 * 32],
-					delay_timer,
-					sound_timer;
-
-	unsigned short	stack[16],
-					sp,
-					opcode,
-					I,
-					pc;
-
-
-	//Initialize everything
-	void initMem() {
-
-		// Use fill_n instead of array[x] = { 0 }
-		// to prevent buffer overrun
-		std::fill_n(memory, 4096, 0);
-		std::fill_n(V, 16, 0);
-		std::fill_n(pixels, 64 * 32, 0);
-		std::fill_n(stack, 16, 0);
-		std::fill_n(key, 16, 0);
-
-		opcode,
-		I,
-		pc,
+		V[16],
+		key[16],
+		pixels[64 * 32],
 		delay_timer,
-		sound_timer,
-		sp = 0;
-	}
+		sound_timer;
 
+}
+
+//Initialize everything
+void initMem() {
+
+	// Use fill_n instead of array[x] = { 0 }
+	// to prevent buffer overrun
+	std::fill_n(mem::memory, 4096, 0);
+	std::fill_n(mem::V, 16, 0);
+	std::fill_n(mem::pixels, 64 * 32, 0);
+	std::fill_n(mem::key, 16, 0);
+
+	mem::delay_timer,
+	mem::sound_timer = 0;
 }
