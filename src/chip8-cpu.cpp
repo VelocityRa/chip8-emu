@@ -1,24 +1,30 @@
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 
 #include "chip8-cpu.h"
 #include "chip8-memory.h"
+#include "sfTextTools.h"
 
 
 void chip8::initCpu()
 {
 	std::fill_n(stack, 16, 0);
 	opcode,
-	I,
-	pc,
-	sp = 0;
+		I,
+		pc = 0x200;
+		sp,
+		delay_timer,
+		sound_timer	= 0;
+
 }
 
 void chip8::initialize()
 {
 	initMem();
 	initCpu();
-
 }
+
 
 int chip8::loadGame(const char* name) const
 {
@@ -26,12 +32,46 @@ int chip8::loadGame(const char* name) const
 	std::streamsize size = game.tellg();
 	game.seekg(0, std::ios::beg);
 
-	game.read(reinterpret_cast<char*>(mem::memory) + 512, size);
+	//Fill the memory with game data at location: 0x200 == 512
+	game.read(reinterpret_cast<char*>(mem::memory) + 0x200, size);
 
 	return game.gcount();
 }
 
-void chip8::emulateCycle()
+bool chip8::emulateCycle()
 {
+	if (!isRunning) { return 1; }
+	//Fetch opcode
+	opcode = mem::memory[pc] << 8 | 
+			 mem::memory[pc+1];
 
+	//Decode opcode
+	switch (opcode & 0xF000)
+	{
+
+	case 0xA000: //Axxx: Sets I to the address xxx
+		I = opcode & 0x0FFF;
+		pc += 2;
+		break;
+
+	default:
+		std::ostringstream opcode_ss;
+		opcode_ss << std::hex << std::setfill('0') << std::uppercase <<
+			"Unknown opcode: 0x" <<  std::setw(4) << opcode;
+
+		appendText(&debugText, &opcode_ss);
+		return false;
+	}
+
+	// Update timers
+	if (delay_timer > 0)
+		--delay_timer;
+
+	if (sound_timer > 0)
+	{
+		if (sound_timer == 1)
+			appendText(&debugText, "BEEP!");
+		--sound_timer;
+	}
+	return true;
 }

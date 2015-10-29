@@ -2,9 +2,11 @@
 #include <sstream>
 #include <string>
 #include <iomanip>
+#include <iostream>
 
 #include "chip8-cpu.h"
 #include "chip8-memory.h"
+#include "sfTextTools.h"
 
 
 //Resolution multiplier
@@ -18,6 +20,7 @@
 #define W WIDTH_PIXELS * RES_MULT
 
 #ifdef _DEBUG
+
 auto isDebug = true;
 #else
 auto isDebug = false;
@@ -29,9 +32,11 @@ void replaceText(sf::Text* text, std::string st);
 static void updRegText(std::ostringstream* ss, sf::Text* regText);
 
 chip8 myChip8;
+sf::Text debugText;
 
 int main(int argc, char* argv[])
 {
+	std::cerr << "TEST" <<std::endl;
 	std::string game_path;
 
 	if (argc > 1)
@@ -43,8 +48,6 @@ int main(int argc, char* argv[])
 		//No path given
 		return 1;
 	}
-
-	//initMem();
 
 	//Setup Window creation
 	sf::ContextSettings settings;
@@ -65,7 +68,6 @@ int main(int argc, char* argv[])
 		window.close();
 	}
 
-	sf::Text debugText;
 	sf::Text regText;
 
 	if (isDebug)
@@ -80,7 +82,7 @@ int main(int argc, char* argv[])
 	}
 
 	myChip8.initialize();
-	appendText(&debugText, "Initializing cpu");
+	appendText(&debugText, "Initializing chip8");
 
 	auto load_result = myChip8.loadGame(game_path.c_str());
 	appendText(&debugText, "Loaded  " + std::to_string(load_result) + "  bytes to memory");
@@ -115,6 +117,12 @@ int main(int argc, char* argv[])
 			}
 		}
 
+		if (!myChip8.emulateCycle())
+		{
+			myChip8.isRunning = false;
+			appendText(&debugText, "Emulation stopped");
+		}
+
 		updRegText(&regSStream, &regText);
 
 		//Draw to framebuffer and display
@@ -128,18 +136,6 @@ int main(int argc, char* argv[])
 	}
 
 	return 0;
-}
-
-//Append string "st" to the debug string
-inline void appendText(sf::Text* text, std::string st)
-{
-	text->setString(text->getString() + st + "\n");
-}
-
-//Replace debug string with st
-inline void replaceText(sf::Text* text, std::string st)
-{
-	text->setString(st);
 }
 
 //Update register values to regText

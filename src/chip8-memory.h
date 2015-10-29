@@ -18,14 +18,6 @@ namespace mem
 	//Pixel state
 	extern unsigned char	pixels[64 * 32];
 
-	//These 2 registers when set above zero,
-	//they will count down to it at 60Hz
-	extern unsigned char	delay_timer;
-
-	//When the sound timer reaches zero, the buzzer sounds
-	//TODO: Implement sound
-	extern unsigned char	sound_timer;
-
 	//State of the keypad
 	extern unsigned char	key[16];
 }

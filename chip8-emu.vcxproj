@@ -181,6 +181,7 @@
   <ItemGroup>
     <ClInclude Include="src\chip8-cpu.h" />
     <ClInclude Include="src\chip8-memory.h" />
+    <ClInclude Include="src\sfTextTools.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

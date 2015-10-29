@@ -37,5 +37,8 @@
     <ClInclude Include="src\chip8-memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\sfTextTools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

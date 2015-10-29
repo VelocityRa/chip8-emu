@@ -15,12 +15,20 @@ private:
 		I,			//Index register
 		pc;			//Program counter
 
+
+	unsigned char
+		delay_timer,   	//These 2 registers when set above zero,
+						//they will count down to it at 60Hz
+		sound_timer;	//When the sound timer reaches zero, the buzzer sounds
+						//TODO: Implement sound
+
 public:
+	bool isRunning = true;
 	bool drawFlag = false;
 
 	void initCpu();
 	void initialize();
 	int  loadGame(const char* name) const;
-	void emulateCycle();
+	bool emulateCycle();
 };
 #endif
