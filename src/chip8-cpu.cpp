@@ -21,10 +21,9 @@ void chip8::initCpu()
 
 void chip8::initialize()
 {
-	initMem();
 	initCpu();
+	initMem();
 }
-
 
 int chip8::loadGame(const char* name) const
 {
@@ -35,12 +34,12 @@ int chip8::loadGame(const char* name) const
 	//Fill the memory with game data at location: 0x200 == 512
 	game.read(reinterpret_cast<char*>(mem::memory) + 0x200, size);
 
-	return game.gcount();
+	return int(game.gcount());
 }
 
+// If this returns false, we need to stop the emulation
 bool chip8::emulateCycle()
 {
-	if (!isRunning) { return 1; }
 	//Fetch opcode
 	opcode = mem::memory[pc] << 8 | 
 			 mem::memory[pc+1];
@@ -53,6 +52,9 @@ bool chip8::emulateCycle()
 		I = opcode & 0x0FFF;
 		pc += 2;
 		break;
+		
+
+
 
 	default:
 		std::ostringstream opcode_ss;
@@ -60,7 +62,7 @@ bool chip8::emulateCycle()
 			"Unknown opcode: 0x" <<  std::setw(4) << opcode;
 
 		appendText(&debugText, &opcode_ss);
-		return false;
+		return false;	// We can't handle this opcode, so stop the emulation
 	}
 
 	// Update timers
@@ -74,4 +76,10 @@ bool chip8::emulateCycle()
 		--sound_timer;
 	}
 	return true;
+}
+
+void chip8::stopEmulation()
+{
+	isRunning = false;
+	appendText(&debugText, "Emulation stopped");
 }

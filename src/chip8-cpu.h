@@ -30,5 +30,6 @@ public:
 	void initialize();
 	int  loadGame(const char* name) const;
 	bool emulateCycle();
+	void stopEmulation();
 };
 #endif

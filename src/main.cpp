@@ -117,10 +117,10 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		if (!myChip8.emulateCycle())
+		if ( myChip8.isRunning && 
+			!myChip8.emulateCycle() )
 		{
-			myChip8.isRunning = false;
-			appendText(&debugText, "Emulation stopped");
+			myChip8.stopEmulation();
 		}
 
 		updRegText(&regSStream, &regText);

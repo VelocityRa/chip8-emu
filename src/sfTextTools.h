@@ -10,25 +10,26 @@
 
 extern sf::Text debugText;
 
-//Append a string to the Text
+// Append a string to the Text
 inline void appendText(sf::Text* text, std::string st)
 {
 	text->setString(text->getString() + st + "\n");
 }
 
-//Append a stringstream to the Text
+// Append a stringstream to the Text,
+// in case we need something more formatted
 inline void appendText(sf::Text* text, std::ostringstream* ss)
 {
 	text->setString(text->getString() + ss->str() + "\n");
 }
 
-//Replace Text with string st
+// Replace Text with string st
 inline void replaceText(sf::Text* text, std::string ss)
 {
 	text->setString(ss);
 }
 
-//Replace Text with stringstream sss
+// Replace Text with stringstream ss
 inline void replaceText(sf::Text* text, std::ostringstream* ss)
 {
 	text->setString(ss->str());
