@@ -10,12 +10,14 @@
 void chip8::initCpu()
 {
 	std::fill_n(stack, 16, 0);
-	opcode ,
-		I = 0;
+	opcode = 0;
+	I = 0;
 	pc = 0x200; // Starting adress where the game is loaded
 	sp = 0;
 	delay_timer = 0;
 	sound_timer = 0;
+
+	opcode_ss << std::hex << std::setfill('0') << std::uppercase;
 }
 
 void chip8::initialize()
@@ -62,11 +64,10 @@ bool chip8::emulateCycle()
 
 bool chip8::decodeOpcode(unsigned short opcode)
 {
-	using namespace mem;	// We're gonna be using registers (mem::V[]) a lot
+	using namespace mem;	// We're gonna be using fields from mem:: a lot
 
-	std::ostringstream opcode_ss;
-	opcode_ss << std::hex << std::setfill('0') << std::uppercase <<
-		"Decoding opcode: 0x" << std::setw(4) << opcode;
+	opcode_ss.str("");
+	opcode_ss << "Decoding opcode: 0x" << std::setw(4) << opcode;
 
 	appendText(&debugText, &opcode_ss);
 
@@ -208,10 +209,10 @@ bool chip8::decodeOpcode(unsigned short opcode)
 				}
 			}
 		}
-
 		drawFlag = true;
-		pc += 2; break;
+		pc += 2; return true;
 	}
+	/*
 	case 0xE000:
 		switch (opcode & 0x00FF)
 		{
@@ -219,19 +220,23 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		case 0x00A1: // (EX9E) Skips the next instruction if the key stored in VX isn't pressed.
 		{}
 		}
-	case 0xF000: //TODO
+		*/
+	case 0xF000:
 		switch (opcode & 0x00FF)
 		{
 		case 0x0007: // (FX07) Sets VX to the value of the delay timer.
 			V[(opcode & 0x0F00) >> 8] = delay_timer;
-			pc += 2; break;
+			pc += 2; return true;
+			/*
 		case 0x000A: // TODO: (FX0A) A key press is awaited, and then stored in VX.
+			// += 2; return true;
+			*/
 		case 0x0015: // (FX15) Sets the delay timer to VX.
 			delay_timer = V[(opcode & 0x0F00) >> 8];
-			pc += 2; break;
+			pc += 2; return true;
 		case 0x0018: // (FX18) Sets the sound timer to VX.
 			sound_timer = V[(opcode & 0x0F00) >> 8];
-			pc += 2; break;
+			pc += 2; return true;
 		case 0x001E: // (FX1E) Adds VX to I. VF is set to 1 when there's a carry,
 					 // and to 0 when there isn't
 			if (V[(opcode & 0x0F00) >> 8] > (0xFF - I))
@@ -243,17 +248,18 @@ bool chip8::decodeOpcode(unsigned short opcode)
 				V[0xF] = 0;
 			}
 			I += V[(opcode & 0x0F00) >> 8];
-			pc += 2; break;
+			pc += 2; return true;
 		case 0x0029: // (FX29) Sets I to the location of the sprite for the character in VX
 					 // Characters 0 - F(in hexadecimal) are represented by a 4x5 font.
 			I = V[(opcode & 0x0F00) >> 8];
+			pc += 2; return true;
 		case 0x0033: // (FX33) Stores the binary-coded decimal representation of
 		{			 // VX at the addresses I, I plus 1, and I plus 2
-			unsigned char X = (opcode & 0x0F00) >> 8;
+			unsigned char X = V[(opcode & 0x0F00) >> 8];
 			memory[I] = X / 100;
 			memory[I + 1] = (X / 10) % 10;
 			memory[I + 2] = (X % 100) % 10;
-			pc += 2; break;
+			pc += 2; return true;
 		}
 		case 0x0055: // (FX55) Stores V0 to VX in memory starting at address I
 		{
@@ -262,9 +268,9 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			{
 				memory[I + i] = V[i];
 			}
-			pc += 2;
+
+			pc += 2; return true;
 		}
-		break;
 		case 0x0065: // (FX65) Fills V0 to VX with values from memory starting at address I
 		{
 			unsigned char X = V[(opcode & 0x0F00) >> 8];
@@ -272,9 +278,8 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			{
 				V[i] = memory[I + i];
 			}
-			pc += 2; break;
+			pc += 2; return true;
 		}
-
 		}
 	default:
 		opcode_ss.str("");

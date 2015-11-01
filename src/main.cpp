@@ -76,10 +76,12 @@ int main(int argc, char* argv[])
 		debugText.setFont(mc_font);
 		debugText.setCharacterSize(12);
 		debugText.setPosition(0 + PAD, 6 + PAD);
+		debugText.setColor(sf::Color(100, 100, 100));
 
 		regText.setFont(mc_font);
 		regText.setCharacterSize(8);
 		regText.setPosition(W - 6 * 5 - PAD, 4 + PAD);
+		regText.setColor(sf::Color::Red);
 	}
 
 	srand(time(nullptr)); // use current time as seed for random generator
@@ -161,7 +163,6 @@ int main(int argc, char* argv[])
 		//Draw to framebuffer and display
 		if (isDebug)
 		{
-			debugText.setColor(sf::Color(100,100,100));
 			window.draw(debugText);
 			window.draw(regText);
 		}
