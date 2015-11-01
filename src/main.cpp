@@ -117,6 +117,7 @@ int main(int argc, char* argv[])
 			}
 		}
 
+		//If emulateCycle returns false we need to stop the emulation
 		if ( myChip8.isRunning && 
 			!myChip8.emulateCycle() )
 		{

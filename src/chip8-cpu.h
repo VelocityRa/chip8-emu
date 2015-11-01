@@ -22,6 +22,8 @@ private:
 		sound_timer;	//When the sound timer reaches zero, the buzzer sounds
 						//TODO: Implement sound
 
+	bool decodeOpcode(unsigned short opcode);
+
 public:
 	bool isRunning = true;
 	bool drawFlag = false;
