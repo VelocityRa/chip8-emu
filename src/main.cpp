@@ -90,9 +90,17 @@ int main(int argc, char* argv[])
 	auto load_result = myChip8.loadGame(game_path.c_str());
 	appendText(&debugText, "Loaded  " + std::to_string(load_result) + "  bytes to memory");
 
+	std::vector<sf::RectangleShape> screen(64 * 32);
+	
 	//Create the stream/string for registry display in Debug mode
 	std::ostringstream regSStream;
 	regSStream << std::hex << std::setfill('0') << std::uppercase;
+
+	for (size_t i = 0; i < 64 * 32; i++)
+	{
+		screen[i].setPosition(i%64*RES_MULT,i/64*RES_MULT);
+		screen[i].setSize(sf::Vector2f(RES_MULT, RES_MULT));
+	}
 
 	//Main Loop
 	while (window.isOpen())
@@ -129,10 +137,29 @@ int main(int argc, char* argv[])
 
 		updRegText(&regSStream, &regText);
 
-		//Draw to framebuffer and display
 		window.clear();
+
+		if (myChip8.drawFlag)
+		{
+			for (size_t i = 0; i < 64 * 32; i++)
+			{
+				screen[i].setFillColor(sf::Color((mem::pixels[i])?sf::Color::White : sf::Color::Black));
+				window.draw(screen[i]);
+			}
+			myChip8.drawFlag = false;
+		}
+		else
+		{
+			for (size_t i = 0; i < 64 * 32; i++)
+			{
+				window.draw(screen[i]);
+			}
+		}
+
+		//Draw to framebuffer and display
 		if (isDebug)
 		{
+			debugText.setColor(sf::Color(100,100,100));
 			window.draw(debugText);
 			window.draw(regText);
 		}

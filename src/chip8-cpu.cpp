@@ -256,9 +256,8 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			memory[I] = X / 100;
 			memory[I + 1] = (X / 10) % 10;
 			memory[I + 2] = (X % 100) % 10;
-			pc += 2;
+			pc += 2; break;
 		}
-		break;
 		case 0x0055: // (FX55) Stores V0 to VX in memory starting at address I
 		{
 			unsigned char X = V[(opcode & 0x0F00) >> 8];
@@ -277,9 +276,8 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			}
 			pc += 2; break;
 		}
+
 		}
-
-
 	default:
 		opcode_ss.str("");
 		opcode_ss << "Unknown opcode: 0x" << std::setw(4) << opcode;
