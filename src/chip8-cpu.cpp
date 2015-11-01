@@ -67,6 +67,12 @@ bool chip8::decodeOpcode(unsigned short opcode)
 {
 	using namespace mem;	// We're gonna be using registers (mem::V[]) a lot
 
+	std::ostringstream opcode_ss;
+	opcode_ss << std::hex << std::setfill('0') << std::uppercase <<
+		"Decoding opcode: 0x" << std::setw(4) << opcode;
+
+	appendText(&debugText, &opcode_ss);
+
 	switch (opcode & 0xF000)
 	{
 	case 0x0000:
@@ -90,8 +96,9 @@ bool chip8::decodeOpcode(unsigned short opcode)
 	case 0x3000: // (3XNN) Skips the next instruction if VX equals NN
 		if (V[(opcode & 0x0F00)] == (opcode & 0x00FF))
 		{
-			pc += 4;
+			pc += 2;
 		}
+		pc += 2;
 		break;
 	case 0x4000: // (4XNN) Skips the next instruction if VX doesn't equal NN
 		if (V[(opcode & 0x0F00)] != (opcode & 0x00FF))
@@ -195,7 +202,11 @@ bool chip8::decodeOpcode(unsigned short opcode)
 	case 0xC000: // (CXNN) Sets VX to the result of a bitwise and operation
 				 // on a random number and NN.
 		V[(opcode & 0x0F00) >> 12] = (rand() & 0x00FF) & (opcode & 0x00FF);
+		pc += 2;
+		break;
 	case 0xD000: //TODO
+		pc += 2;
+		break;
 	case 0xE000:
 		switch (opcode & 0x00FF)
 		{
@@ -232,9 +243,8 @@ bool chip8::decodeOpcode(unsigned short opcode)
 
 
 	default:
-		std::ostringstream opcode_ss;
-		opcode_ss << std::hex << std::setfill('0') << std::uppercase <<
-			"Unknown opcode: 0x" << std::setw(4) << opcode;
+		opcode_ss.str("");
+		opcode_ss << "Unknown opcode: 0x" << std::setw(4) << opcode;
 
 		appendText(&debugText, &opcode_ss);
 		return false; // We can't handle this opcode, so stop the emulation

@@ -19,12 +19,14 @@
 #define H HEIGHT_PIXELS * RES_MULT
 #define W WIDTH_PIXELS * RES_MULT
 
+/*
 #ifdef _DEBUG
-
 auto isDebug = true;
 #else
 auto isDebug = false;
 #endif
+*/
+auto isDebug = true;
 
 void appendText(sf::Text* text, std::string st);
 void replaceText(sf::Text* text, std::string st);
@@ -72,8 +74,8 @@ int main(int argc, char* argv[])
 	if (isDebug)
 	{
 		debugText.setFont(mc_font);
-		debugText.setCharacterSize(16);
-		debugText.setPosition(0 + PAD, 8 + PAD);
+		debugText.setCharacterSize(12);
+		debugText.setPosition(0 + PAD, 6 + PAD);
 
 		regText.setFont(mc_font);
 		regText.setCharacterSize(8);

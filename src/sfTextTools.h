@@ -10,30 +10,43 @@
 
 extern sf::Text debugText;
 
+// Replace Text with string st
+inline void replaceText(sf::Text* text, std::string ss)
+{
+	text->setString(ss + '\n');
+}
+
+// Replace Text with stringstream ss
+inline void replaceText(sf::Text* text, std::ostringstream* ss)
+{
+	text->setString(ss->str() + '\n');
+}
+
 // Append a string to the Text
 inline void appendText(sf::Text* text, std::string st)
 {
-	text->setString(text->getString() + st + "\n");
+	if (text->getLocalBounds().height > 32 * 12)
+	{
+		replaceText(text, st);
+	}
+	else
+	{
+		text->setString(text->getString() + st + "\n");
+	}
 }
 
 // Append a stringstream to the Text,
 // in case we need something more formatted
 inline void appendText(sf::Text* text, std::ostringstream* ss)
 {
-	text->setString(text->getString() + ss->str() + "\n");
+	if (text->getLocalBounds().height > 32 * 12)
+	{
+		replaceText(text, ss);
+	}
+	else
+	{
+		text->setString(text->getString() + ss->str() + "\n");
+	}
 }
-
-// Replace Text with string st
-inline void replaceText(sf::Text* text, std::string ss)
-{
-	text->setString(ss);
-}
-
-// Replace Text with stringstream ss
-inline void replaceText(sf::Text* text, std::ostringstream* ss)
-{
-	text->setString(ss->str());
-}
-
 
 #endif
