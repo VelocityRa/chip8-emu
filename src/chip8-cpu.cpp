@@ -45,10 +45,7 @@ bool chip8::emulateCycle()
 
 	//Decode opcode
 	//If decodeOpcode returns false, return false
-	if (decodeOpcode(opcode))
-	{
-	}
-	else return false;
+	if (decodeOpcode(opcode)) {} else return false;
 
 	// Update timers
 	if (delay_timer > 0)
@@ -252,7 +249,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			I = V[(opcode & 0x0F00) >> 8];
 		case 0x0033: // (FX33) Stores the binary-coded decimal representation of
 		{			 // VX at the addresses I, I plus 1, and I plus 2
-			unsigned char X = V[(opcode & 0x0F00) >> 8];
+			unsigned char X = (opcode & 0x0F00) >> 8;
 			memory[I] = X / 100;
 			memory[I + 1] = (X / 10) % 10;
 			memory[I + 2] = (X % 100) % 10;
@@ -260,13 +257,14 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		}
 		case 0x0055: // (FX55) Stores V0 to VX in memory starting at address I
 		{
-			unsigned char X = V[(opcode & 0x0F00) >> 8];
+			unsigned char X = (opcode & 0x0F00) >> 8;
 			for (auto i = 0; i < X; i++)
 			{
 				memory[I + i] = V[i];
 			}
-			pc += 2; break;
+			pc += 2;
 		}
+		break;
 		case 0x0065: // (FX65) Fills V0 to VX with values from memory starting at address I
 		{
 			unsigned char X = V[(opcode & 0x0F00) >> 8];

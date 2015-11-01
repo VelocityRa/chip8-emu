@@ -139,11 +139,13 @@ int main(int argc, char* argv[])
 
 		window.clear();
 
+		// Sacrificing LoC/executable size, for speed
 		if (myChip8.drawFlag)
 		{
 			for (size_t i = 0; i < 64 * 32; i++)
 			{
-				screen[i].setFillColor(sf::Color((mem::pixels[i])?sf::Color::White : sf::Color::Black));
+				screen[i].setFillColor((mem::pixels[i]) ? sf::Color::White : 
+														  sf::Color::Black);
 				window.draw(screen[i]);
 			}
 			myChip8.drawFlag = false;
@@ -163,6 +165,7 @@ int main(int argc, char* argv[])
 			window.draw(debugText);
 			window.draw(regText);
 		}
+
 		window.display();
 	}
 
