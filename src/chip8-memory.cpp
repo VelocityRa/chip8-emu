@@ -17,7 +17,8 @@ namespace mem
 		memory[4096],
 		V[16],
 		key[16],
-		pixels[64 * 32];
+		pixels[64 * 32],
+		chip8_fontset[80];
 
 }
 
@@ -30,4 +31,8 @@ void initMem() {
 	std::fill_n(mem::V, 16, 0);
 	std::fill_n(mem::pixels, 64 * 32, 0);
 	std::fill_n(mem::key, 16, 0);
+
+	// Load fontset
+	for (int i = 0; i < 80; ++i)
+		mem::memory[i] = mem::chip8_fontset[i];
 }
