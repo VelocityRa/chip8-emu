@@ -213,9 +213,8 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		}
 
 		drawFlag = true;
-		pc += 2;
+		pc += 2; break;
 	}
-	break;
 	case 0xE000:
 		switch (opcode & 0x00FF)
 		{
@@ -260,9 +259,24 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			pc += 2;
 		}
 		break;
-		case 0x0055:
-		case 0x0065:
-		{}
+		case 0x0055: // (FX55) Stores V0 to VX in memory starting at address I
+		{
+			unsigned char X = V[(opcode & 0x0F00) >> 8];
+			for (auto i = 0; i < X; i++)
+			{
+				memory[I + i] = V[i];
+			}
+			pc += 2; break;
+		}
+		case 0x0065: // (FX65) Fills V0 to VX with values from memory starting at address I
+		{
+			unsigned char X = V[(opcode & 0x0F00) >> 8];
+			for (auto i = 0; i < X; i++)
+			{
+				V[i] = memory[I + i];
+			}
+			pc += 2; break;
+		}
 		}
 
 
