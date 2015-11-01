@@ -36,9 +36,7 @@ sf::Text debugText;
 
 int main(int argc, char* argv[])
 {
-	std::cerr << "TEST" <<std::endl;
 	std::string game_path;
-
 	if (argc > 1)
 	{
 		game_path = argv[1];
@@ -49,11 +47,11 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	//Setup Window creation
+	//Setup window creation
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 0;
 
-	//Create Window
+	//Create window
 	sf::RenderWindow window(sf::VideoMode(W, H), "Chip-8 Emulator",
 	                        sf::Style::Titlebar | sf::Style::Close,
 	                        settings);
@@ -66,6 +64,7 @@ int main(int argc, char* argv[])
 	{
 		//Couldn't load font
 		window.close();
+		return 1;
 	}
 
 	sf::Text regText;
@@ -80,6 +79,8 @@ int main(int argc, char* argv[])
 		regText.setCharacterSize(8);
 		regText.setPosition(W - 6 * 5 - PAD, 4 + PAD);
 	}
+
+	srand(time(nullptr)); // use current time as seed for random generator
 
 	myChip8.initialize();
 	appendText(&debugText, "Initializing chip8");
