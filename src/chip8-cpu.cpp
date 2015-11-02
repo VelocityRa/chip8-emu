@@ -212,15 +212,24 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		drawFlag = true;
 		pc += 2; return true;
 	}
-	/*
+
 	case 0xE000:
 		switch (opcode & 0x00FF)
 		{
 		case 0x009E: // (EX9E) Skips the next instruction if the key stored in VX is pressed.
+			if (key[V[(opcode & 0x0F00) >> 8]] == 1)
+			{
+				pc += 2;
+			}
+			pc += 2; return true;
 		case 0x00A1: // (EX9E) Skips the next instruction if the key stored in VX isn't pressed.
-		{}
+			if (key[V[(opcode & 0x0F00) >> 8]] == 0)
+			{
+				pc += 2;
+			}
+			pc += 2; return true;
 		}
-		*/
+		
 	case 0xF000:
 		switch (opcode & 0x00FF)
 		{

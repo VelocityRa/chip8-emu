@@ -69,7 +69,11 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
+	sf::Clock Clock;
+
 	sf::Text regText;
+	sf::Text fpsText;
+	unsigned short Framerate;
 
 	if (isDebug)
 	{
@@ -80,8 +84,13 @@ int main(int argc, char* argv[])
 
 		regText.setFont(mc_font);
 		regText.setCharacterSize(8);
-		regText.setPosition(W - 6 * 5 - PAD, 4 + PAD);
+		regText.setPosition(W - 6 * 5 - PAD, 40 + PAD);
 		regText.setColor(sf::Color::Red);
+
+		fpsText.setFont(mc_font);
+		fpsText.setCharacterSize(12);
+		fpsText.setPosition(W - 6 * 3 - PAD, 8 + PAD);
+		fpsText.setColor(sf::Color(sf::Color::Cyan));
 	}
 
 	srand(time(nullptr)); // use current time as seed for random generator
@@ -100,7 +109,7 @@ int main(int argc, char* argv[])
 
 	for (size_t i = 0; i < 64 * 32; i++)
 	{
-		screen[i].setPosition(i%64*RES_MULT,i/64*RES_MULT);
+		screen[i].setPosition(i % 64 * RES_MULT, i / 64 * RES_MULT);;
 		screen[i].setSize(sf::Vector2f(RES_MULT, RES_MULT));
 	}
 
@@ -163,8 +172,15 @@ int main(int argc, char* argv[])
 		//Draw to framebuffer and display
 		if (isDebug)
 		{
+			// Get fps
+			Framerate = 1.f / Clock.getElapsedTime().asSeconds();
+			Clock.restart();
+			replaceText(&fpsText, std::to_string(Framerate));
+
+			// Draw all debug texts
 			window.draw(debugText);
 			window.draw(regText);
+			window.draw(fpsText);
 		}
 
 		window.display();
