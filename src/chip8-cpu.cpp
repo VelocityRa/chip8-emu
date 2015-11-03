@@ -40,13 +40,15 @@ int chip8::loadGame(const char* name) const
 
 void chip8::keyPress(unsigned char k)
 {
-	waitForKey = false;
-	isRunning = true;
+	if (waitForKey) {
+		waitForKey = false;
+		isRunning = true;
 
-	mem::V[(opcode & 0x0F00) >> 8] = k;
-	mem::key[k] = 1;
+		mem::V[(opcode & 0x0F00) >> 8] = k;
+		mem::key[k] = 1;
 
-	pc += 2;
+		pc += 2;
+	}
 }
 
 // If this returns false, we need to stop the emulation
