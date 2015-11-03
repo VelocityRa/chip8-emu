@@ -16,8 +16,8 @@
 
 #define WIDTH_PIXELS 64
 #define HEIGHT_PIXELS 32
-#define H HEIGHT_PIXELS * RES_MULT
-#define W WIDTH_PIXELS * RES_MULT
+#define height HEIGHT_PIXELS * RES_MULT
+#define width WIDTH_PIXELS * RES_MULT
 
 /*
 #ifdef _DEBUG
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 	settings.antialiasingLevel = 0;
 
 	//Create window
-	sf::RenderWindow window(sf::VideoMode(W, H), "Chip-8 Emulator",
+	sf::RenderWindow window(sf::VideoMode(width, height), "Chip-8 Emulator",
 	                        sf::Style::Titlebar | sf::Style::Close,
 	                        settings);
 	window.setFramerateLimit(60);
@@ -64,6 +64,7 @@ int main(int argc, char* argv[])
 
 	if (!mc_font.loadFromFile("resources/fonts/Minecraftia-Regular.ttf"))
 	{
+		exit:
 		//Couldn't load font
 		window.close();
 		return 1;
@@ -84,12 +85,12 @@ int main(int argc, char* argv[])
 
 		regText.setFont(mc_font);
 		regText.setCharacterSize(8);
-		regText.setPosition(W - 6 * 5 - PAD, 40 + PAD);
+		regText.setPosition(width - 6 * 5 - PAD, 40 + PAD);
 		regText.setColor(sf::Color::Red);
 
 		fpsText.setFont(mc_font);
 		fpsText.setCharacterSize(12);
-		fpsText.setPosition(W - 6 * 3 - PAD, 8 + PAD);
+		fpsText.setPosition(width - 6 * 3 - PAD, 8 + PAD);
 		fpsText.setColor(sf::Color(sf::Color::Cyan));
 	}
 
@@ -130,10 +131,43 @@ int main(int argc, char* argv[])
 				switch (event.key.code)
 				{
 				case sf::Keyboard::F3:
-				{
-					isDebug=!isDebug;
+					isDebug = !isDebug;
+					break;
+				case sf::Keyboard::F1:
+					myChip8.isRunning = !myChip8.isRunning;
+					break;
+				case sf::Keyboard::Tab:
+					window.setFramerateLimit(0);
+					break;
+					/*
+				if (myChip8.waitForKey)
+					{
+				case sf::Keyboard::A: break;
+				case sf::Keyboard::B: break;
+				case sf::Keyboard::C: break;
+				case sf::Keyboard::D: break;
+				case sf::Keyboard::E: break;
+				case sf::Keyboard::F: break;
+				case sf::Keyboard::Q: break;
+				case sf::Keyboard::R: break;
+				case sf::Keyboard::S: break;
+				case sf::Keyboard::V: break;
+				case sf::Keyboard::W: break;
+				case sf::Keyboard::X: break;
+				case sf::Keyboard::Z: break;
+				case sf::Keyboard::Num0: break;
+				case sf::Keyboard::Num1: break;
+				case sf::Keyboard::Num2: break;
+				case sf::Keyboard::Num3: break;
+				case sf::Keyboard::Num4: break;
 				}
+				*/
 				}
+				break;
+			case sf::Event::KeyReleased:
+				if (event.key.code == sf::Keyboard::Tab)
+					window.setFramerateLimit(60);
+					break;
 			default:
 				break;
 			}
@@ -157,6 +191,7 @@ int main(int argc, char* argv[])
 			{
 				screen[i].setFillColor((mem::pixels[i]) ? sf::Color::White : 
 														  sf::Color::Black);
+				//if (screen[i].getFillColor() == sf::Color::White)
 				window.draw(screen[i]);
 			}
 			myChip8.drawFlag = false;
@@ -165,6 +200,7 @@ int main(int argc, char* argv[])
 		{
 			for (size_t i = 0; i < 64 * 32; i++)
 			{
+				//if (screen[i].getFillColor()==sf::Color::White)
 				window.draw(screen[i]);
 			}
 		}

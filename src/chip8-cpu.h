@@ -29,6 +29,7 @@ private:
 public:
 	bool isRunning = true;
 	bool drawFlag = false;
+	bool waitForKey = false;
 
 	void initCpu();
 	void initialize();

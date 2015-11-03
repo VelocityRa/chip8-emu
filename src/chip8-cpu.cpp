@@ -77,12 +77,13 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		switch (opcode & 0x0FFF)
 		{
 		case 0x00E0: // Clear screen
-
+			std::fill_n(pixels, 64 * 32, 0);
 			pc += 2; break;
 		case 0x00EE: // Return from a subroutine
 			pc = stack[sp--];
 			pc += 2; break;
 		}
+		break;
 	case 0x1000: // (1NNN) Jumps to address NNN
 		pc = opcode & 0x0FFF;
 		break;
@@ -112,6 +113,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			}
 			pc += 2; break;
 		}
+		break;
 	case 0x6000: // (6XNN) Sets VX to NN
 		V[(opcode & 0x0F00) >> 8] = (opcode & 0x00FF);
 		pc += 2; break;
@@ -172,6 +174,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			V[(opcode & 0x0F00) >> 8] <<= 1;
 			pc += 2; break;
 		}
+		break;
 	case 0x9000: // (9XY0) Skips the next instruction if VX doesn't equal VY.
 		if (V[(opcode & 0x0F00) >> 8] != V[(opcode & 0x00F0) >> 4])
 		{
@@ -229,7 +232,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			}
 			pc += 2; return true;
 		}
-		
+		break;
 	case 0xF000:
 		switch (opcode & 0x00FF)
 		{
