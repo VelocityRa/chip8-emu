@@ -19,7 +19,7 @@ namespace mem
 	extern unsigned char	pixels[64 * 32];
 
 	//State of the keypad
-	extern unsigned char	key[16];
+	extern  bool			key[16];
 
 	//Fontset
 	extern unsigned char	chip8_fontset[80];

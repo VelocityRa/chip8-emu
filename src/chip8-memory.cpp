@@ -13,10 +13,10 @@ Chip 8's memory map:
 
 namespace mem
 {
+	bool key[16];
 	unsigned char
 		memory[4096],
 		V[16],
-		key[16],
 		pixels[64 * 32],
 		chip8_fontset[80] =
 		{
@@ -47,7 +47,7 @@ void initMem() {
 	std::fill_n(mem::memory, 4096, 0);
 	std::fill_n(mem::V, 16, 0);
 	std::fill_n(mem::pixels, 64 * 32, 0);
-	std::fill_n(mem::key, 16, 0);
+	std::fill_n(mem::key, 16, false);
 
 	// Load fontset
 	for (int i = 0; i < 80; ++i)

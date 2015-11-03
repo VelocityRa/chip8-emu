@@ -38,6 +38,17 @@ int chip8::loadGame(const char* name) const
 	return int(game.gcount());
 }
 
+void chip8::keyPress(unsigned char k)
+{
+	waitForKey = false;
+	isRunning = true;
+
+	mem::V[(opcode & 0x0F00) >> 8] = k;
+	mem::key[k] = 1;
+
+	pc += 2;
+}
+
 // If this returns false, we need to stop the emulation
 bool chip8::emulateCycle()
 {
@@ -64,7 +75,7 @@ bool chip8::emulateCycle()
 
 void chip8::detInfLoop()
 {
-	appendText(&debugText, "Detected infinite loop, game stopped.");
+	appendText(&debugText, "Infinite loop detected, game stopped.");
 	stopEmulation();
 }
 
@@ -86,14 +97,13 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			std::fill_n(pixels, 64 * 32, 0);
 			pc += 2; break;
 		case 0x00EE: // Return from a subroutine
-			pc = stack[sp--];
 			appendText(&debugText, "RET from subroutine " + std::to_string(sp));
+			pc = stack[sp--];
 			pc += 2; break;
 		}
-		break;
 	case 0x1000: // (1NNN) Jumps to address NNN
 		pc = opcode & 0x0FFF;
-		if (pc == memory[pc] << 8 | memory[pc+1] )
+		if ((0x1000 | pc) == (memory[pc] << 8 | memory[pc+1]) )
 		{
 			detInfLoop();	// Infinite loop detected (game stopped execution)
 		}
@@ -101,7 +111,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 	case 0x2000: // (2NNN) Calls subroutine at NNN
 		stack[sp++] = pc;
 		pc = opcode & 0x0FFF;
-		appendText(&debugText, "CALL subroutine "+std::to_string(sp));
+		appendText(&debugText, "CALL subroutine " + std::to_string(sp));
 		break;
 	case 0x3000: // (3XNN) Skips the next instruction if VX equals NN
 		if (V[(opcode & 0x0F00) >> 8] == (opcode & 0x00FF))
@@ -234,6 +244,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		case 0x009E: // (EX9E) Skips the next instruction if the key stored in VX is pressed.
 			if (key[V[(opcode & 0x0F00) >> 8]] == 1)
 			{
+				key[V[(opcode & 0x0F00) >> 8]] = 0;
 				pc += 2;
 			}
 			pc += 2; return true;
@@ -244,17 +255,16 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			}
 			pc += 2; return true;
 		}
-		break;
 	case 0xF000:
 		switch (opcode & 0x00FF)
 		{
 		case 0x0007: // (FX07) Sets VX to the value of the delay timer.
 			V[(opcode & 0x0F00) >> 8] = delay_timer;
 			pc += 2; return true;
-			/*
 		case 0x000A: // TODO: (FX0A) A key press is awaited, and then stored in VX.
-			// += 2; return true;
-			*/
+			waitForKey = true;
+			isRunning = false;
+			return true;
 		case 0x0015: // (FX15) Sets the delay timer to VX.
 			delay_timer = V[(opcode & 0x0F00) >> 8];
 			pc += 2; return true;

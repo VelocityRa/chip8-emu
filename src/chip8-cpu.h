@@ -34,6 +34,7 @@ public:
 	void initCpu();
 	void initialize();
 	int  loadGame(const char* name) const;
+	void keyPress(const unsigned char k);
 	bool emulateCycle();
 	void detInfLoop();
 	void stopEmulation();
