@@ -101,6 +101,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			pc = stack[sp--];
 			pc += 2; break;
 		}
+		break;
 	case 0x1000: // (1NNN) Jumps to address NNN
 		pc = opcode & 0x0FFF;
 		if ((0x1000 | pc) == (memory[pc] << 8 | memory[pc+1]) )
@@ -237,7 +238,6 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		drawFlag = true;
 		pc += 2; return true;
 	}
-
 	case 0xE000:
 		switch (opcode & 0x00FF)
 		{

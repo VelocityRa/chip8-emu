@@ -113,6 +113,8 @@ int main(int argc, char* argv[])
 		screen[i].setSize(sf::Vector2f(RES_MULT, RES_MULT));
 	}
 
+	sf::RectangleShape rec(sf::Vector2f(100, 100));
+	rec.setFillColor(sf::Color::Yellow);
 	//Main Loop
 	while (window.isOpen())
 	{
@@ -225,7 +227,7 @@ int main(int argc, char* argv[])
 		window.draw(regText);
 		window.draw(fpsText);
 	}
-
+	if (myChip8.waitForKey) { window.draw(rec); }
 	window.display();
 	}
 
