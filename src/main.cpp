@@ -62,9 +62,8 @@ int main(int argc, char* argv[])
 	//Load a pixely font
 	sf::Font mc_font;
 
-	if (!mc_font.loadFromFile("resources/fonts/Minecraftia-Regular.ttf"))
+	if (!mc_font.loadFromFile("C:/Users/Nikos/Documents/Visual Studio 2015/Projects/chip8-emu/resources/fonts/Minecraftia-Regular.ttf"))
 	{
-		exit:
 		//Couldn't load font
 		window.close();
 		return 1;
@@ -80,7 +79,7 @@ int main(int argc, char* argv[])
 	{
 		debugText.setFont(mc_font);
 		debugText.setCharacterSize(12);
-		debugText.setPosition(0 + PAD, 6 + PAD);
+		debugText.setPosition(0 + PAD, 12 * 3 + 6 + PAD);
 		debugText.setColor(sf::Color(100, 100, 100));
 
 		regText.setFont(mc_font);

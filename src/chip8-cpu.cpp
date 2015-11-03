@@ -62,6 +62,12 @@ bool chip8::emulateCycle()
 	return true;
 }
 
+void chip8::detInfLoop()
+{
+	appendText(&debugText, "Detected infinite loop, game stopped.");
+	stopEmulation();
+}
+
 bool chip8::decodeOpcode(unsigned short opcode)
 {
 	using namespace mem;	// We're gonna be using fields from mem:: a lot
@@ -81,15 +87,21 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			pc += 2; break;
 		case 0x00EE: // Return from a subroutine
 			pc = stack[sp--];
+			appendText(&debugText, "RET from subroutine " + std::to_string(sp));
 			pc += 2; break;
 		}
 		break;
 	case 0x1000: // (1NNN) Jumps to address NNN
 		pc = opcode & 0x0FFF;
+		if (pc == memory[pc] << 8 | memory[pc+1] )
+		{
+			detInfLoop();	// Infinite loop detected (game stopped execution)
+		}
 		break;
 	case 0x2000: // (2NNN) Calls subroutine at NNN
 		stack[sp++] = pc;
 		pc = opcode & 0x0FFF;
+		appendText(&debugText, "CALL subroutine "+std::to_string(sp));
 		break;
 	case 0x3000: // (3XNN) Skips the next instruction if VX equals NN
 		if (V[(opcode & 0x0F00) >> 8] == (opcode & 0x00FF))
