@@ -111,6 +111,7 @@ int main(int argc, char* argv[])
 	{
 		screen[i].setPosition(i % 64 * RES_MULT, i / 64 * RES_MULT);;
 		screen[i].setSize(sf::Vector2f(RES_MULT, RES_MULT));
+		screen[i].setFillColor(sf::Color::Black);
 	}
 
 	//Signifies waiting for input
@@ -200,7 +201,6 @@ int main(int argc, char* argv[])
 		{
 			screen[i].setFillColor((mem::pixels[i]) ? sf::Color::White : 
 														sf::Color::Black);
-			//if (screen[i].getFillColor() == sf::Color::White)
 			window.draw(screen[i]);
 		}
 		myChip8.drawFlag = false;
@@ -209,7 +209,6 @@ int main(int argc, char* argv[])
 	{
 		for (size_t i = 0; i < 64 * 32; i++)
 		{
-			//if (screen[i].getFillColor()==sf::Color::White)
 			window.draw(screen[i]);
 		}
 	}
