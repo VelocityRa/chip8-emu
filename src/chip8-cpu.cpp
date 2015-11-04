@@ -5,6 +5,7 @@
 #include "chip8-cpu.h"
 #include "chip8-memory.h"
 #include "sfTextTools.h"
+#include <stdarg.h>
 
 
 void chip8::initCpu()
@@ -17,6 +18,7 @@ void chip8::initCpu()
 	delay_timer = 0;
 	sound_timer = 0;
 
+	std::fill_n(buf, 256, 0);
 	opcode_ss << std::hex << std::setfill('0') << std::uppercase;
 }
 
@@ -85,10 +87,12 @@ bool chip8::decodeOpcode(unsigned short opcode)
 {
 	using namespace mem;	// We're gonna be using fields from mem:: a lot
 
-	opcode_ss.str("");
-	opcode_ss << "Decoding opcode: 0x" << std::setw(4) << opcode;
+	std::fill_n(buf, 256, 0);
 
-	appendText(&debugText, &opcode_ss);
+	//opcode_ss.str("");
+	//opcode_ss << "Decoding opcode: 0x" << std::setw(4) << opcode;
+	//appendText(&debugText, &opcode_ss);
+
 
 	switch (opcode & 0xF000)
 	{
@@ -223,6 +227,8 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		unsigned short height = opcode & 0x000F;
 		unsigned short pixel;
 
+		sprintf_s(buf, 256, "Drawing in X:%d, Y:%d, height:%d", x, y, height);
+
 		V[0xF] = 0;
 		for (int yline = 0; yline < height; yline++)
 		{
@@ -238,25 +244,26 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			}
 		}
 		drawFlag = true;
-		pc += 2; return true;
+		pc += 2; break;
 	}
 	case 0xE000:
 		switch (opcode & 0x00FF)
 		{
 		case 0x009E: // (EX9E) Skips the next instruction if the key stored in VX is pressed.
-			if (key[V[(opcode & 0x0F00) >> 8]] == 1)
+			if (key[V[(opcode & 0x0F00) >> 8]])
 			{
-				key[V[(opcode & 0x0F00) >> 8]] = 0;
+				key[V[(opcode & 0x0F00) >> 8]] = false;
 				pc += 2;
 			}
-			pc += 2; return true;
+			pc += 2; break;
 		case 0x00A1: // (EX9E) Skips the next instruction if the key stored in VX isn't pressed.
-			if (key[V[(opcode & 0x0F00) >> 8]] == 0)
+			if (!key[V[(opcode & 0x0F00) >> 8]])
 			{
 				pc += 2;
 			}
-			pc += 2; return true;
+			pc += 2; break;
 		}
+		break;
 	case 0xF000:
 		switch (opcode & 0x00FF)
 		{
@@ -324,6 +331,9 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		appendText(&debugText, &opcode_ss);
 		return false; // We can't handle this opcode, so stop the emulation
 	}
+	opcode_ss.str("");
+	opcode_ss << '(' << std::setw(4) << opcode << "): ";
+	appendText(&debugText, opcode_ss.str() + std::string(buf));
 	return true;
 }
 

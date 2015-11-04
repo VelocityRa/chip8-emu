@@ -118,6 +118,8 @@ int main(int argc, char* argv[])
 	rec.setPosition(width - 34, 21);
 	rec.setFillColor(sf::Color::Yellow);
 
+	std::string t;
+
 	//Main Loop
 	while (window.isOpen())
 	{

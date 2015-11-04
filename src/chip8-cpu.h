@@ -21,7 +21,7 @@ private:
 						//they will count down to it at 60Hz
 		sound_timer;	//When the sound timer reaches zero, the buzzer sounds
 						//TODO: Implement sound
-
+	char buf[256];
 	std::ostringstream opcode_ss;
 
 	bool decodeOpcode(unsigned short opcode);
