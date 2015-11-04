@@ -175,11 +175,32 @@ int main(int argc, char* argv[])
 			switch (event.key.code)
 			{
 			case sf::Keyboard::Tab:
+			{
 				window.setFramerateLimit(60);
 				break;
-			default:
-				break;
 			}
+			default:
+				case sf::Keyboard::Num1: myChip8.keyRelease(1); break;
+				case sf::Keyboard::Num2: myChip8.keyRelease(2); break;
+				case sf::Keyboard::Num3: myChip8.keyRelease(3); break;
+				case sf::Keyboard::Num4: myChip8.keyRelease(0xC); break;
+
+				case sf::Keyboard::Q: myChip8.keyRelease(4); break;
+				case sf::Keyboard::W: myChip8.keyRelease(5); break;
+				case sf::Keyboard::E: myChip8.keyRelease(6); break;
+				case sf::Keyboard::R: myChip8.keyRelease(0xD); break;
+
+				case sf::Keyboard::A: myChip8.keyRelease(7); break;
+				case sf::Keyboard::S: myChip8.keyRelease(8); break;
+				case sf::Keyboard::D: myChip8.keyRelease(9); break;
+				case sf::Keyboard::F: myChip8.keyRelease(0xE); break;
+
+				case sf::Keyboard::Z: myChip8.keyRelease(0xA); break;
+				case sf::Keyboard::X: myChip8.keyRelease(0); break;
+				case sf::Keyboard::C: myChip8.keyRelease(0xB); break;
+				case sf::Keyboard::V: myChip8.keyRelease(0xF); break;
+			}
+			break;
 		}
 	}
 

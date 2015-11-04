@@ -51,6 +51,15 @@ void chip8::keyPress(unsigned char k)
 
 		pc += 2;
 	}
+	else
+	{
+		mem::key[k] = true;
+	}
+}
+
+void chip8::keyRelease(const unsigned char k)
+{
+	mem::key[k] = false;
 }
 
 // If this returns false, we need to stop the emulation
@@ -103,9 +112,9 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			std::fill_n(pixels, 64 * 32, 0);
 			pc += 2; break;
 		case 0x00EE: // Return from a subroutine
-			sprintf_s(buf, 256, "RET from subroutine %d", sp);
 			pc = stack[--sp];
 			pc += 2;
+			sprintf_s(buf, 256, "RET from subroutine before %03X, sp:%d", pc, sp);
 			break;
 		default:
 			goto uknown;
@@ -122,7 +131,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 	case 0x2000: // (2NNN) Calls subroutine at NNN
 		stack[sp++] = pc;
 		pc = opcode & 0x0FFF;
-		sprintf_s(buf, 256, "CALL subroutine %d", sp);
+		sprintf_s(buf, 256, "CALL subroutine %03X, sp:%d", pc, sp-1);
 		break;
 	case 0x3000: // (3XNN) Skips the next instruction if VX equals NN
 		if (V[(opcode & 0x0F00) >> 8] == (opcode & 0x00FF))
@@ -251,10 +260,10 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		sprintf_s(buf, 256, "Drawing in X:%d, Y:%d, height:%d", x, y, height);
 
 		V[0xF] = 0;
-		for (int yline = 0; yline < height; yline++)
+		for (auto yline = 0; yline < height; yline++)
 		{
 			pixel = memory[I + yline];
-			for (int xline = 0; xline < 8; xline++)
+			for (auto xline = 0; xline < 8; xline++)
 			{
 				if ((pixel & (0x80 >> xline)) != 0)
 				{
@@ -341,7 +350,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		case 0x0055: // (FX55) Stores V0 to VX in memory starting at address I
 		{
 			unsigned char X = (opcode & 0x0F00) >> 8;
-			for (auto i = 0; i < X; i++)
+			for (auto i = 0; i <= X; i++)
 			{
 				memory[I + i] = V[i];
 			}
@@ -351,7 +360,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		case 0x0065: // (FX65) Fills V0 to VX with values from memory starting at address I
 		{
 			unsigned char X = V[(opcode & 0x0F00) >> 8];
-			for (auto i = 0; i < X; i++)
+			for (auto i = 0; i <= X; i++)
 			{
 				V[i] = memory[I + i];
 			}
