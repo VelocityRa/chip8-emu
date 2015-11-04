@@ -19,6 +19,9 @@
 #define height HEIGHT_PIXELS * RES_MULT
 #define width WIDTH_PIXELS * RES_MULT
 
+#define FG_COLOR 255, 255, 255
+#define BG_COLOR 5, 15, 55
+
 /*
 #ifdef _DEBUG
 auto isDebug = true;
@@ -111,7 +114,7 @@ int main(int argc, char* argv[])
 	{
 		screen[i].setPosition(i % 64 * RES_MULT, i / 64 * RES_MULT);;
 		screen[i].setSize(sf::Vector2f(RES_MULT, RES_MULT));
-		screen[i].setFillColor(sf::Color::Black);
+		screen[i].setFillColor(sf::Color(BG_COLOR));
 	}
 
 	//Signifies waiting for input
@@ -220,8 +223,8 @@ int main(int argc, char* argv[])
 	{
 		for (size_t i = 0; i < 64 * 32; i++)
 		{
-			screen[i].setFillColor((mem::pixels[i]) ? sf::Color::White : 
-														sf::Color::Black);
+			screen[i].setFillColor((mem::pixels[i]) ? sf::Color(FG_COLOR) : 
+														sf::Color(BG_COLOR));
 			window.draw(screen[i]);
 		}
 		myChip8.drawFlag = false;
