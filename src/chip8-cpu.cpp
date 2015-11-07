@@ -98,10 +98,6 @@ bool chip8::decodeOpcode(unsigned short opcode)
 
 	std::fill_n(buf, 256, 0);
 
-	//opcode_ss.str("");
-	//opcode_ss << "Decoding opcode: 0x" << std::setw(4) << opcode;
-	//appendText(&debugText, &opcode_ss);
-
 	switch (opcode & 0xF000)
 	{
 	case 0x0000:

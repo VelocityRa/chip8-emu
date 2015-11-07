@@ -118,11 +118,15 @@ int main(int argc, char* argv[])
 	}
 
 	//Signifies waiting for input
-	sf::RectangleShape rec(sf::Vector2f(35, 10));
-	rec.setPosition(width - 34, 21);
-	rec.setFillColor(sf::Color::Yellow);
+	sf::RectangleShape input_rec(sf::Vector2f(32, 7));
+	input_rec.setPosition(width - 34, 21);
+	input_rec.setFillColor(sf::Color::Yellow);
 
-	std::string t;
+	//Signifies that the draw flag is set
+	sf::RectangleShape draw_rec(sf::Vector2f(32, 7));
+	draw_rec.setPosition(width - 34, 28);
+	draw_rec.setFillColor(sf::Color::Green);
+
 
 	//Main Loop
 	while (window.isOpen())
@@ -227,6 +231,7 @@ int main(int argc, char* argv[])
 														sf::Color(BG_COLOR));
 			window.draw(screen[i]);
 		}
+		if (isDebug) { window.draw(draw_rec); }
 		myChip8.drawFlag = false;
 	}
 	else
@@ -249,8 +254,10 @@ int main(int argc, char* argv[])
 		window.draw(debugText);
 		window.draw(regText);
 		window.draw(fpsText);
+
+		if (myChip8.waitForKey) { window.draw(input_rec); }
 	}
-	if (myChip8.waitForKey) { window.draw(rec); }
+
 	window.display();
 	}
 
