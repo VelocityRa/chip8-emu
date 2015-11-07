@@ -25,7 +25,7 @@ inline void replaceText(sf::Text* text, std::ostringstream* ss)
 // Append a string to the Text
 inline void appendText(sf::Text* text, std::string st)
 {
-	if (text->getLocalBounds().height > 32 * 12)
+	if (text->getLocalBounds().height > 32 * 12 - 35)
 	{
 		replaceText(text, st);
 	}
@@ -39,7 +39,7 @@ inline void appendText(sf::Text* text, std::string st)
 // in case we need something more formatted
 inline void appendText(sf::Text* text, std::ostringstream* ss)
 {
-	if (text->getLocalBounds().height > 32 * 12)
+	if (text->getLocalBounds().height > 32 * 12 - 35)
 	{
 		replaceText(text, ss);
 	}

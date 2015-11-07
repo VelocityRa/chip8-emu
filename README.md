@@ -22,5 +22,6 @@ The controls for the emulator are as follows:
     
 Special Emulator controls:
 * **F1**: Pause/Resume Emulation
+* **F2**: Step (Emulate 1 instruction)
 * **F3**: Toggle Debug Mode
 * **Tab**: (Hold) Disable Throttling

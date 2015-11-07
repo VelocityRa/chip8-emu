@@ -145,12 +145,17 @@ int main(int argc, char* argv[])
 		case sf::Event::KeyPressed:
 			switch (event.key.code)
 			{
-			case sf::Keyboard::F3:
-				isDebug = !isDebug;
-				break;
 			case sf::Keyboard::F1:
 				myChip8.isRunning = !myChip8.isRunning;
 				break;
+			case sf::Keyboard::F2:
+				myChip8.isRunning = false;
+				myChip8.emulateCycle();
+				break;
+			case sf::Keyboard::F3:
+				isDebug = !isDebug;
+				break;
+
 			case sf::Keyboard::Tab:
 			{
 				window.setFramerateLimit(0);
