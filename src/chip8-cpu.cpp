@@ -188,7 +188,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			if (V[(opcode & 0x00F0) >> 4] > (0xFF - V[(opcode & 0x0F00) >> 8]))
 				V[0xF] = 1; //carry
 			else { V[0xF] = 0; }
-			sprintf_s(buf, 256, "V%X += V%X, carry=%d", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4), V[0xF];
+			sprintf_s(buf, 256, "V%X += V%X, carry=%d", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4, V[0xF]);
 			V[(opcode & 0x0F00) >> 8] += V[(opcode & 0x00F0) >> 4];
 			pc += 2; break;
 		case 0x0005: // (8XY5) VY is subtracted from VX. VF is set to 0 when there's a borrow,
@@ -196,7 +196,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			if (V[(opcode & 0x00F0) >> 4] > (V[(opcode & 0x0F00) >> 8]))
 				V[0xF] = 0; //borrow
 			else { V[0xF] = 1;}
-			sprintf_s(buf, 256, "V%X -= V%X, carry=%d", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4), V[0xF];
+			sprintf_s(buf, 256, "V%X -= V%X, carry=%d", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4, V[0xF]);
 			V[(opcode & 0x0F00) >> 8] -= V[(opcode & 0x00F0) >> 4];
 			pc += 2; break;
 		case 0x0006: // (8XY6) Shifts VX right by one. 
@@ -210,7 +210,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			if (V[(opcode & 0x00F0) >> 4] < (V[(opcode & 0x0F00) >> 8]))
 				V[0xF] = 0; //borrow
 			else { V[0xF] = 1; }
-			sprintf_s(buf, 256, "V%X -= V%X, carry=%d", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4), V[0xF];
+			sprintf_s(buf, 256, "V%X -= V%X, carry=%d", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4, V[0xF]);
 			V[(opcode & 0x0F00) >> 8] = V[(opcode & 0x00F0) >> 4] - V[(opcode & 0x0F00) >> 8];
 			pc += 2; break;
 		case 0x000E: // (8XYE) Shifts VX left by one. 
@@ -238,7 +238,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		pc += 2; break;
 	case 0xB000: // (BNNN) Jumps to the address NNN plus V0.
 		pc = (opcode & 0x0FFF) + V[0x0];
-		sprintf_s(buf, 256, "Jump to %03X + V0 = %04X", (opcode & 0x0FFF) + V[0x0]);
+		sprintf_s(buf, 256, "Jump to %03X + V0 = %04X", (opcode & 0x0FFF), (opcode & 0x0FFF) + V[0x0]);
 		break;
 	case 0xC000: // (CXNN) Sets VX to the result of a bitwise and operation
 				 // on a random number and NN.
@@ -298,7 +298,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		{
 		case 0x0007: // (FX07) Sets VX to the value of the delay timer.
 			V[(opcode & 0x0F00) >> 8] = delay_timer;
-			sprintf_s(buf, 256, "V%X = delay_timer = %d", (opcode & 0x0F00) >> 8), delay_timer;
+			sprintf_s(buf, 256, "V%X = delay_timer = %d", (opcode & 0x0F00) >> 8, delay_timer);
 			pc += 2; goto ret;
 		case 0x000A: // TODO: (FX0A) A key press is awaited, and then stored in VX.
 			sprintf_s(buf, 256, "Waiting for key to be stored in V%X", (opcode & 0x0F00) >> 8);
@@ -326,12 +326,12 @@ bool chip8::decodeOpcode(unsigned short opcode)
 				V[0xF] = 0;
 			}
 			I += V[(opcode & 0x0F00) >> 8];
-			sprintf_s(buf, 256, "I += V%X, carry=%d", (opcode & 0x0F00) >> 8), V[0xF];
+			sprintf_s(buf, 256, "I += V%X, carry=%d", (opcode & 0x0F00) >> 8, V[0xF]);
 			pc += 2; goto ret;
 		case 0x0029: // (FX29) Sets I to the location of the sprite for the character in VX
 					 // Characters 0 - F(in hexadecimal) are represented by a 4x5 font.
 			I = V[(opcode & 0x0F00) >> 8] * 5;
-			sprintf_s(buf, 256, "I = %03X (loc of sprite)", (opcode & 0x0F00) >> 8, I);
+			sprintf_s(buf, 256, "I = %03X (loc of sprite for char %X)", I, (opcode & 0x0F00) >> 8);
 			pc += 2; goto ret;
 		case 0x0033: // (FX33) Stores the binary-coded decimal representation of
 		{			 // VX at the addresses I, I plus 1, and I plus 2
