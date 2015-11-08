@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <sstream>
 #include <string>
 #include <iomanip>
@@ -50,7 +51,7 @@ int main(int argc, char* argv[])
 	else
 	{
 		//No path given
-		return 1;
+		return -1;
 	}
 
 	//Setup window creation
@@ -65,58 +66,41 @@ int main(int argc, char* argv[])
 
 	//Load a pixely font
 	sf::Font mc_font;
-
-	if (!mc_font.loadFromFile("C:/Users/Nikos/Documents/Visual Studio 2015/Projects/chip8-emu/resources/fonts/Minecraftia-Regular.ttf"))
+	if (!mc_font.loadFromFile("resources/fonts/Minecraftia-Regular.ttf"))
 	{
 		//Couldn't load font
 		window.close();
-		return 1;
-	}
-
-	sf::Clock Clock;
-
-	sf::Text regText;
-	sf::Text fpsText;
-	unsigned short Framerate;
-
-	if (isDebug)
-	{
-		debugText.setFont(mc_font);
-		debugText.setCharacterSize(12);
-		debugText.setPosition(0 + PAD, 12 * 3 + 6 + PAD);
-		debugText.setColor(sf::Color(100, 100, 100));
-
-		regText.setFont(mc_font);
-		regText.setCharacterSize(8);
-		regText.setPosition(width - 6 * 5 - PAD, 40 + PAD);
-		regText.setColor(sf::Color::Red);
-
-		fpsText.setFont(mc_font);
-		fpsText.setCharacterSize(12);
-		fpsText.setPosition(width - 6 * 3 - PAD, 8 + PAD);
-		fpsText.setColor(sf::Color(sf::Color::Cyan));
+		return -1;
 	}
 
 	srand(time(nullptr)); // use current time as seed for random generator
 
-	myChip8.initialize();
-	appendText(&debugText, "Initializing chip8");
+	// Set up debugging stuff
+	// -----------------------------------------------------------
+	sf::Text regText;
+	sf::Text fpsText;
 
-	auto load_result = myChip8.loadGame(game_path.c_str());
-	appendText(&debugText, "Loaded  " + std::to_string(load_result) + "  bytes to memory");
+	sf::Clock Clock;
+	unsigned short Framerate;
 
-	std::vector<sf::RectangleShape> screen(64 * 32);
-	
+	debugText.setFont(mc_font);
+	debugText.setCharacterSize(12);
+	debugText.setPosition(0 + PAD, 12 * 3 + 6 + PAD);
+	debugText.setColor(sf::Color(100, 100, 100));
+
+	regText.setFont(mc_font);
+	regText.setCharacterSize(8);
+	regText.setPosition(width - 6 * 5 - PAD, 40 + PAD);
+	regText.setColor(sf::Color::Red);
+
+	fpsText.setFont(mc_font);
+	fpsText.setCharacterSize(12);
+	fpsText.setPosition(width - 6 * 3 - PAD, 8 + PAD);
+	fpsText.setColor(sf::Color(sf::Color::Cyan));
+
 	//Create the stream/string for registry display in Debug mode
 	std::ostringstream regSStream;
 	regSStream << std::hex << std::setfill('0') << std::uppercase;
-
-	for (size_t i = 0; i < 64 * 32; i++)
-	{
-		screen[i].setPosition(i % 64 * RES_MULT, i / 64 * RES_MULT);;
-		screen[i].setSize(sf::Vector2f(RES_MULT, RES_MULT));
-		screen[i].setFillColor(sf::Color(BG_COLOR));
-	}
 
 	//Signifies waiting for input
 	sf::RectangleShape input_rec(sf::Vector2f(32, 7));
@@ -127,6 +111,26 @@ int main(int argc, char* argv[])
 	sf::RectangleShape draw_rec(sf::Vector2f(32, 7));
 	draw_rec.setPosition(width - 34, 28);
 	draw_rec.setFillColor(sf::Color::Green);
+
+	// -----------------------------------------------------------
+
+	appendText(&debugText, "Initializing chip8");
+	if (myChip8.initialize() )
+	{
+		return -1;
+	}
+
+	auto load_result = myChip8.loadGame(game_path.c_str());
+	appendText(&debugText, "Loaded  " + std::to_string(load_result) + "  bytes to memory");
+
+	std::vector<sf::RectangleShape> screen(64 * 32);
+
+	for (size_t i = 0; i < 64 * 32; i++)
+	{
+		screen[i].setPosition(i % 64 * RES_MULT, i / 64 * RES_MULT);;
+		screen[i].setSize(sf::Vector2f(RES_MULT, RES_MULT));
+		screen[i].setFillColor(sf::Color(BG_COLOR));
+	}
 
 	myChip8.isRunning = false;
 

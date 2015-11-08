@@ -5,6 +5,7 @@
 #include "chip8-cpu.h"
 #include "chip8-memory.h"
 #include "sfTextTools.h"
+#include <SFML/Audio.hpp>
 
 void chip8::initCpu()
 {
@@ -15,15 +16,27 @@ void chip8::initCpu()
 	sp = 0;
 	delay_timer = 0;
 	sound_timer = 0;
-
-	std::fill_n(buf, 256, 0);
-	opcode_ss << std::hex << std::setfill('0') << std::uppercase;
 }
 
-void chip8::initialize()
+int chip8::initialize()
 {
 	initCpu();
 	initMem();
+
+	//Buffer used for the opcode debugging text
+	std::fill_n(buf, 256, 0);
+	opcode_ss << std::hex << std::setfill('0') << std::uppercase;
+
+	//Load beep sound
+
+	if (!sound_buffer.loadFromFile("resources/sounds/beep.wav"))
+	{
+		//Couldn't load sound
+		return -1;
+	}
+
+	beep.setBuffer(sound_buffer);
+	return 0;
 }
 
 int chip8::loadGame(const char* name)
@@ -82,6 +95,7 @@ bool chip8::emulateCycle(short cycles)
 		{
 			if (sound_timer == 1)
 				appendText(&debugText, "BEEP!");
+				beep.play();
 			--sound_timer;
 		}
 	}

@@ -2,6 +2,9 @@
 #pragma once
 #endif
 
+#include <SFML/Audio/SoundBuffer.hpp>
+#include <SFML/Audio/Sound.hpp>
+
 #ifndef CPU_H
 #define CPU_H
 
@@ -24,6 +27,9 @@ private:
 	char buf[256];
 	std::ostringstream opcode_ss;
 
+	sf::SoundBuffer sound_buffer;
+	sf::Sound beep;
+
 	bool decodeOpcode(unsigned short opcode);
 
 public:
@@ -32,7 +38,7 @@ public:
 	bool waitForKey = false;
 
 	void initCpu();
-	void initialize();
+	int initialize();
 	static int  loadGame(const char* name);
 	void keyPress(const unsigned char k);
 	void keyRelease(const unsigned char k);
