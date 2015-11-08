@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 	sf::RenderWindow window(sf::VideoMode(width, height), "Chip-8 Emulator",
 	                        sf::Style::Titlebar | sf::Style::Close,
 	                        settings);
-	window.setFramerateLimit(60);
+	window.setFramerateLimit(300);
 
 	//Load a pixely font
 	sf::Font mc_font;
@@ -127,6 +127,7 @@ int main(int argc, char* argv[])
 	draw_rec.setPosition(width - 34, 28);
 	draw_rec.setFillColor(sf::Color::Green);
 
+	myChip8.isRunning = false;
 
 	//Main Loop
 	while (window.isOpen())

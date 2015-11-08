@@ -5,8 +5,6 @@
 #include "chip8-cpu.h"
 #include "chip8-memory.h"
 #include "sfTextTools.h"
-#include <stdarg.h>
-
 
 void chip8::initCpu()
 {
@@ -119,9 +117,10 @@ bool chip8::decodeOpcode(unsigned short opcode)
 	case 0x1000: // (1NNN) Jumps to address NNN
 		pc = opcode & 0x0FFF;
 		sprintf_s(buf, 256, "Jump to %03X", pc);
-		if ((0x1000 | pc) == (memory[pc] << 8 | memory[pc+1]) )
+		if ((0x1000 | pc) == (memory[pc] << 8 | memory[(pc + 1) % 0x1000]) )
 		{
 			detInfLoop();	// Infinite loop detected (game stopped execution)
+			return false;
 		}
 		break;
 	case 0x2000: // (2NNN) Calls subroutine at NNN
