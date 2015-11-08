@@ -26,7 +26,7 @@ void chip8::initialize()
 	initMem();
 }
 
-int chip8::loadGame(const char* name) const
+int chip8::loadGame(const char* name)
 {
 	std::ifstream game(name, std::ios::in | std::ios::binary | std::ios::ate);
 	std::streamsize size = game.tellg();
@@ -61,25 +61,29 @@ void chip8::keyRelease(const unsigned char k)
 }
 
 // If this returns false, we need to stop the emulation
-bool chip8::emulateCycle()
+bool chip8::emulateCycle(short cycles)
 {
-	//Fetch opcode
-	opcode = mem::memory[pc] << 8 |
-		mem::memory[pc + 1];
-
-	//Decode opcode
-	//If decodeOpcode returns false, return false
-	if (decodeOpcode(opcode)) {} else return false;
-
-	// Update timers
-	if (delay_timer > 0)
-		--delay_timer;
-
-	if (sound_timer > 0)
+	for (auto i = 0; i < cycles; i++)
 	{
-		if (sound_timer == 1)
-			appendText(&debugText, "BEEP!");
-		--sound_timer;
+		//Fetch opcode
+		opcode = mem::memory[pc] << 8 |
+			mem::memory[pc + 1];
+
+		//Decode opcode
+		//If decodeOpcode returns false, return false
+		if (decodeOpcode(opcode)) {}
+		else return false;
+
+		// Update timers
+		if (delay_timer > 0)
+			--delay_timer;
+
+		if (sound_timer > 0)
+		{
+			if (sound_timer == 1)
+				appendText(&debugText, "BEEP!");
+			--sound_timer;
+		}
 	}
 	return true;
 }

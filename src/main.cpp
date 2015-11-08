@@ -22,6 +22,7 @@
 #define FG_COLOR 255, 255, 255
 #define BG_COLOR 5, 15, 55
 
+
 /*
 #ifdef _DEBUG
 auto isDebug = true;
@@ -60,7 +61,7 @@ int main(int argc, char* argv[])
 	sf::RenderWindow window(sf::VideoMode(width, height), "Chip-8 Emulator",
 	                        sf::Style::Titlebar | sf::Style::Close,
 	                        settings);
-	window.setFramerateLimit(300);
+	window.setFramerateLimit(60);
 
 	//Load a pixely font
 	sf::Font mc_font;
@@ -219,7 +220,7 @@ int main(int argc, char* argv[])
 
 	//If emulateCycle returns false we need to stop the emulation
 	if ( myChip8.isRunning && 
-		!myChip8.emulateCycle() )
+		!myChip8.emulateCycle(6) )
 	{
 		myChip8.stopEmulation();
 	}

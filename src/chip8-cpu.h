@@ -33,10 +33,10 @@ public:
 
 	void initCpu();
 	void initialize();
-	int  loadGame(const char* name) const;
+	static int  loadGame(const char* name);
 	void keyPress(const unsigned char k);
 	void keyRelease(const unsigned char k);
-	bool emulateCycle();
+	bool emulateCycle(short cycles = 1);
 	void detInfLoop();
 	void stopEmulation();
 
