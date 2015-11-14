@@ -357,7 +357,9 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			memory[I] = X / 100;
 			memory[I + 1] = (X / 10) % 10;
 			memory[I + 2] = (X % 100) % 10;
-			sprintf_s(buf, 256, "I = BCD(V%X)", (opcode & 0x0F00) >> 8);
+			sprintf_s(buf, 256, "mem[I] = BCD(V%X), VX is %X, so changing memory to %X, %X, %X",
+				X, V[X], memory[I], memory[I+1], memory[I+2]);
+			isRunning = false;
 			pc += 2; goto ret;
 		}
 		case 0x0055: // (FX55) Stores V0 to VX in memory starting at address I
@@ -372,12 +374,12 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		}
 		case 0x0065: // (FX65) Fills V0 to VX with values from memory starting at address I
 		{
-			unsigned char X = V[(opcode & 0x0F00) >> 8];
+			unsigned char X = (opcode & 0x0F00) >> 8;
 			for (auto i = 0; i <= X; i++)
 			{
 				V[i] = memory[I + i];
 			}
-			sprintf_s(buf, 256, "Fill V0 to V%X with values from I=%03X", (opcode & 0x0F00) >> 8, I);
+			sprintf_s(buf, 256, "Fill V0 to V%X with values from I=%03X", X, I);
 			pc += 2; goto ret;
 		}
 		default:
