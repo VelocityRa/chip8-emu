@@ -29,7 +29,7 @@ int chip8::initialize()
 
 	//Load beep sound
 
-	if (!sound_buffer.loadFromFile("resources/sounds/beep.wav"))
+	if (!sound_buffer.loadFromFile("C:/Users/Nikos/Documents/Visual Studio 2015/Projects/chip8-emu/resources/sounds/beep.wav"))
 	{
 		//Couldn't load sound
 		return -1;
@@ -78,6 +78,8 @@ bool chip8::emulateCycle(short cycles)
 {
 	for (auto i = 0; i < cycles; i++)
 	{
+		if (!isRunning) { break; }
+
 		//Fetch opcode
 		opcode = mem::memory[pc] << 8 |
 			mem::memory[pc + 1];
@@ -270,8 +272,15 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		unsigned short height = opcode & 0x000F;
 		unsigned short pixel;
 
-		sprintf_s(buf, 256, "Drawing in X:%d, Y:%d, height:%d", x, y, height);
-
+		if (x >= WIDTH_PIXELS | y >= HEIGHT_PIXELS ) // Invalid draw position given
+		{
+			sprintf_s(buf, 256, "Invalid position, X:%d, Y:%d", x, y);
+			isRunning = false;
+		}
+		else
+		{
+			sprintf_s(buf, 256, "Drawing in X:%d, Y:%d, height:%d", x, y, height);
+		}
 		V[0xF] = 0;
 		for (auto yline = 0; yline < height; yline++)
 		{
@@ -359,7 +368,6 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			memory[I + 2] = (X % 100) % 10;
 			sprintf_s(buf, 256, "mem[I] = BCD(V%X), VX is %X, so changing memory to %X, %X, %X",
 				X, V[X], memory[I], memory[I+1], memory[I+2]);
-			isRunning = false;
 			pc += 2; goto ret;
 		}
 		case 0x0055: // (FX55) Stores V0 to VX in memory starting at address I

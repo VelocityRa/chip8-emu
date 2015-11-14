@@ -8,6 +8,9 @@
 #ifndef CPU_H
 #define CPU_H
 
+#define WIDTH_PIXELS 64
+#define HEIGHT_PIXELS 32
+
 class chip8
 {
 private:
