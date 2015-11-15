@@ -5,7 +5,6 @@
 #include "chip8-cpu.h"
 #include "chip8-memory.h"
 #include "sfTextTools.h"
-#include <SFML/Audio.hpp>
 
 void chip8::initCpu()
 {
@@ -28,7 +27,6 @@ int chip8::initialize()
 	opcode_ss << std::hex << std::setfill('0') << std::uppercase;
 
 	//Load beep sound
-
 	if (!sound_buffer.loadFromFile("C:/Users/Nikos/Documents/Visual Studio 2015/Projects/chip8-emu/resources/sounds/beep.wav"))
 	{
 		//Couldn't load sound

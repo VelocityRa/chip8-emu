@@ -1,9 +1,7 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include <sstream>
 #include <string>
 #include <iomanip>
-#include <iostream>
 
 #include "chip8-cpu.h"
 #include "chip8-memory.h"
@@ -244,10 +242,11 @@ int main(int argc, char* argv[])
 	// Sacrificing LoC/executable size, for speed
 	if (myChip8.drawFlag)
 	{
+		sf::Color fg_color(FG_COLOR);
+		sf::Color bg_color(BG_COLOR);
 		for (size_t i = 0; i < 64 * 32; i++)
 		{
-			screen[i].setFillColor((mem::pixels[i]) ? sf::Color(FG_COLOR) : 
-														sf::Color(BG_COLOR));
+			screen[i].setFillColor((mem::pixels[i]) ? fg_color : bg_color);
 			window.draw(screen[i]);
 		}
 		if (isDebug) { window.draw(draw_rec); }
