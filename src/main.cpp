@@ -168,25 +168,29 @@ int main(int argc, char* argv[])
 				break;
 			}
 			default:
-				case sf::Keyboard::Num1: myChip8.keyPress(1); break;
-				case sf::Keyboard::Num2: myChip8.keyPress(2); break;
-				case sf::Keyboard::Num3: myChip8.keyPress(3); break;
-				case sf::Keyboard::Num4: myChip8.keyPress(0xC); break;
+				// Assign keys to Chip8 key codes 
+				#define keypress(x) myChip8.keyPress(x); break;
 
-				case sf::Keyboard::Q: myChip8.keyPress(4); break;
-				case sf::Keyboard::W: myChip8.keyPress(5); break;
-				case sf::Keyboard::E: myChip8.keyPress(6); break;
-				case sf::Keyboard::R: myChip8.keyPress(0xD); break;
+				case sf::Keyboard::Num1: keypress(1); 
+				case sf::Keyboard::Num2: keypress(2);
+				case sf::Keyboard::Num3: keypress(3);
+				case sf::Keyboard::Num4: keypress(0xC);
 
-				case sf::Keyboard::A: myChip8.keyPress(7); break;
-				case sf::Keyboard::S: myChip8.keyPress(8); break;
-				case sf::Keyboard::D: myChip8.keyPress(9); break;
-				case sf::Keyboard::F: myChip8.keyPress(0xE); break;
+				case sf::Keyboard::Q: keypress(4);
+				case sf::Keyboard::W: keypress(5);
+				case sf::Keyboard::E: keypress(6);
+				case sf::Keyboard::R: keypress(0xD);
 
-				case sf::Keyboard::Z: myChip8.keyPress(0xA); break;
-				case sf::Keyboard::X: myChip8.keyPress(0); break;
-				case sf::Keyboard::C: myChip8.keyPress(0xB); break;
-				case sf::Keyboard::V: myChip8.keyPress(0xF); break;
+				case sf::Keyboard::A: keypress(7);
+				case sf::Keyboard::S: keypress(8);
+				case sf::Keyboard::D: keypress(9);
+				case sf::Keyboard::F: keypress(0xE);
+
+				case sf::Keyboard::Z: keypress(0xA);
+				case sf::Keyboard::X: keypress(0);
+				case sf::Keyboard::C: keypress(0xB);
+				case sf::Keyboard::V: keypress(0xF);
+				#undef  keypress(x)
 			}
 			break;
 		case sf::Event::KeyReleased:
@@ -198,25 +202,29 @@ int main(int argc, char* argv[])
 				break;
 			}
 			default:
-				case sf::Keyboard::Num1: myChip8.keyRelease(1); break;
-				case sf::Keyboard::Num2: myChip8.keyRelease(2); break;
-				case sf::Keyboard::Num3: myChip8.keyRelease(3); break;
-				case sf::Keyboard::Num4: myChip8.keyRelease(0xC); break;
+				// Assign keys to Chip8 key codes 
+				#define keyrelease(x) myChip8.keyRelease(x); break;
 
-				case sf::Keyboard::Q: myChip8.keyRelease(4); break;
-				case sf::Keyboard::W: myChip8.keyRelease(5); break;
-				case sf::Keyboard::E: myChip8.keyRelease(6); break;
-				case sf::Keyboard::R: myChip8.keyRelease(0xD); break;
+				case sf::Keyboard::Num1: keyrelease(1);
+				case sf::Keyboard::Num2: keyrelease(2);
+				case sf::Keyboard::Num3: keyrelease(3);
+				case sf::Keyboard::Num4: keyrelease(0xC);
 
-				case sf::Keyboard::A: myChip8.keyRelease(7); break;
-				case sf::Keyboard::S: myChip8.keyRelease(8); break;
-				case sf::Keyboard::D: myChip8.keyRelease(9); break;
-				case sf::Keyboard::F: myChip8.keyRelease(0xE); break;
+				case sf::Keyboard::Q: keyrelease(4);
+				case sf::Keyboard::W: keyrelease(5);
+				case sf::Keyboard::E: keyrelease(6);
+				case sf::Keyboard::R: keyrelease(0xD);
 
-				case sf::Keyboard::Z: myChip8.keyRelease(0xA); break;
-				case sf::Keyboard::X: myChip8.keyRelease(0); break;
-				case sf::Keyboard::C: myChip8.keyRelease(0xB); break;
-				case sf::Keyboard::V: myChip8.keyRelease(0xF); break;
+				case sf::Keyboard::A: keyrelease(7);
+				case sf::Keyboard::S: keyrelease(8);
+				case sf::Keyboard::D: keyrelease(9);
+				case sf::Keyboard::F: keyrelease(0xE);
+
+				case sf::Keyboard::Z: keyrelease(0xA);
+				case sf::Keyboard::X: keyrelease(0);
+				case sf::Keyboard::C: keyrelease(0xB);
+				case sf::Keyboard::V: keyrelease(0xF);
+				#undef keyrelease(x)
 			}
 			break;
 		}
