@@ -19,7 +19,7 @@
 #define width WIDTH_PIXELS * RES_MULT
 
 #define FG_COLOR 255, 255, 255
-#define BG_COLOR 5, 15, 55
+#define BG_COLOR 0, 40, 102
 
 
 /*
