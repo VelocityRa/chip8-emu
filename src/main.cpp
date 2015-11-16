@@ -120,6 +120,8 @@ int main(int argc, char* argv[])
 	appendText(&debugText, "Loaded  " + std::to_string(load_result) + "  bytes to memory");
 
 	std::vector<sf::RectangleShape> screen(64 * 32);
+	sf::Color fg_color(FG_COLOR);
+	sf::Color bg_color(BG_COLOR);
 
 	for (size_t i = 0; i < 64 * 32; i++)
 	{
@@ -228,7 +230,7 @@ int main(int argc, char* argv[])
 
 	//If emulateCycle returns false we need to stop the emulation
 	if ( myChip8.isRunning && 
-		!myChip8.emulateCycle(7) )
+		!myChip8.emulateCycle(6) )
 	{
 		myChip8.stopEmulation();
 	}
@@ -240,8 +242,6 @@ int main(int argc, char* argv[])
 	// Sacrificing LoC/executable size, for speed
 	if (myChip8.drawFlag)
 	{
-		sf::Color fg_color(FG_COLOR);
-		sf::Color bg_color(BG_COLOR);
 		for (size_t i = 0; i < 64 * 32; i++)
 		{
 			screen[i].setFillColor((mem::pixels[i]) ? fg_color : bg_color);
