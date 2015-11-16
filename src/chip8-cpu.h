@@ -32,7 +32,7 @@ private:
 
 	sf::SoundBuffer sound_buffer;
 	sf::Sound beep;
-
+	unsigned short last2opcodes;
 	bool decodeOpcode(unsigned short opcode);
 
 public:

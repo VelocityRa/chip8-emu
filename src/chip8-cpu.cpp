@@ -293,6 +293,11 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			}
 		}
 
+		drawFlag = ((last2opcodes & 0xFFFF0000) >> 16 == opcode);
+
+		last2opcodes |= opcode;
+		last2opcodes <<= 16;
+
 		pc += 2; break;
 	}
 	case 0xE000:
