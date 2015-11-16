@@ -22,14 +22,12 @@
 #define BG_COLOR 0, 40, 102
 
 
-/*
+
 #ifdef _DEBUG
 auto isDebug = true;
 #else
 auto isDebug = false;
 #endif
-*/
-auto isDebug = true;
 
 void appendText(sf::Text* text, std::string st);
 void replaceText(sf::Text* text, std::string st);
@@ -71,7 +69,7 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	srand(time(nullptr)); // use current time as seed for random generator
+	srand(static_cast<unsigned int>(time(nullptr))); // use current time as seed for random generator
 
 	// Set up debugging stuff
 	// -----------------------------------------------------------
@@ -154,7 +152,7 @@ int main(int argc, char* argv[])
 				break;
 			case sf::Keyboard::F2:
 				myChip8.isRunning = false;
-				myChip8.emulateCycle();
+				myChip8.emulateCycle(1, true);
 				break;
 			case sf::Keyboard::F3:
 				isDebug = !isDebug;
@@ -188,7 +186,7 @@ int main(int argc, char* argv[])
 				case sf::Keyboard::X: keypress(0);
 				case sf::Keyboard::C: keypress(0xB);
 				case sf::Keyboard::V: keypress(0xF);
-				#undef  keypress(x)
+				#undef keypress
 			}
 			break;
 		case sf::Event::KeyReleased:
@@ -222,7 +220,7 @@ int main(int argc, char* argv[])
 				case sf::Keyboard::X: keyrelease(0);
 				case sf::Keyboard::C: keyrelease(0xB);
 				case sf::Keyboard::V: keyrelease(0xF);
-				#undef keyrelease(x)
+				#undef keyrelease
 			}
 			break;
 		}
@@ -230,7 +228,7 @@ int main(int argc, char* argv[])
 
 	//If emulateCycle returns false we need to stop the emulation
 	if ( myChip8.isRunning && 
-		!myChip8.emulateCycle(6) )
+		!myChip8.emulateCycle(7) )
 	{
 		myChip8.stopEmulation();
 	}
@@ -264,7 +262,7 @@ int main(int argc, char* argv[])
 	if (isDebug)
 	{
 		// Get fps
-		Framerate = 1.f / Clock.getElapsedTime().asSeconds();
+		Framerate = short(1.f / Clock.getElapsedTime().asSeconds());
 		Clock.restart();
 		replaceText(&fpsText, std::to_string(Framerate));
 

@@ -72,11 +72,11 @@ void chip8::keyRelease(const unsigned char k)
 }
 
 // If this returns false, we need to stop the emulation
-bool chip8::emulateCycle(short cycles)
+bool chip8::emulateCycle(short cycles, bool force)
 {
 	for (auto i = 0; i < cycles; i++)
 	{
-		if (!isRunning) { break; }
+		if (!isRunning & !force) { break; }
 
 		//Fetch opcode
 		opcode = mem::memory[pc] << 8 |
@@ -105,7 +105,6 @@ bool chip8::emulateCycle(short cycles)
 void chip8::detInfLoop()
 {
 	appendText(&debugText, "Infinite loop detected, game stopped.");
-	stopEmulation();
 }
 
 bool chip8::decodeOpcode(unsigned short opcode)
@@ -293,7 +292,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 				}
 			}
 		}
-		drawFlag = true;
+
 		pc += 2; break;
 	}
 	case 0xE000:
