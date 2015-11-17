@@ -293,6 +293,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			}
 		}
 
+		drawFlag = true;
 		pc += 2; break;
 	}
 	case 0xE000:

@@ -13,10 +13,6 @@
 //Padding pixels for debug strings
 #define PAD 3
 
-#define WIDTH_PIXELS 64
-#define HEIGHT_PIXELS 32
-#define height HEIGHT_PIXELS * RES_MULT
-#define width WIDTH_PIXELS * RES_MULT
 
 #define FG_COLOR 255, 255, 255
 #define BG_COLOR 0, 40, 102
@@ -34,7 +30,11 @@ void replaceText(sf::Text* text, std::string st);
 
 static void updRegText(std::ostringstream* ss, sf::Text* regText);
 
+void createScreen();
+void resizeScreen(bool isExtended);
+
 chip8 myChip8;
+std::vector<sf::RectangleShape> screen(64 * 32);
 sf::Text debugText;
 
 int main(int argc, char* argv[])
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 	settings.antialiasingLevel = 0;
 
 	//Create window
-	sf::RenderWindow window(sf::VideoMode(width, height), "Chip-8 Emulator",
+	sf::RenderWindow window(sf::VideoMode(64 * RES_MULT, 32 * RES_MULT), "Chip-8 Emulator",
 	                        sf::Style::Titlebar | sf::Style::Close,
 	                        settings);
 	window.setFramerateLimit(60);
@@ -70,6 +70,9 @@ int main(int argc, char* argv[])
 	}
 
 	srand(static_cast<unsigned int>(time(nullptr))); // use current time as seed for random generator
+
+	sf::Color fg_color(FG_COLOR);
+	sf::Color bg_color(BG_COLOR);
 
 	// Set up debugging stuff
 	// -----------------------------------------------------------
@@ -86,12 +89,12 @@ int main(int argc, char* argv[])
 
 	regText.setFont(mc_font);
 	regText.setCharacterSize(8);
-	regText.setPosition(width - 6 * 5 - PAD, 40 + PAD);
+	regText.setPosition(64*RES_MULT - 6 * 5 - PAD, 40 + PAD);
 	regText.setColor(sf::Color::Red);
 
 	fpsText.setFont(mc_font);
 	fpsText.setCharacterSize(12);
-	fpsText.setPosition(width - 6 * 3 - PAD, 8 + PAD);
+	fpsText.setPosition(64*RES_MULT - 6 * 3 - PAD, 8 + PAD);
 	fpsText.setColor(sf::Color(sf::Color::Cyan));
 
 	//Create the stream/string for registry display in Debug mode
@@ -100,12 +103,12 @@ int main(int argc, char* argv[])
 
 	//Signifies waiting for input
 	sf::RectangleShape input_rec(sf::Vector2f(32, 7));
-	input_rec.setPosition(width - 34, 21);
+	input_rec.setPosition(64*RES_MULT - 34, 21);
 	input_rec.setFillColor(sf::Color::Yellow);
 
 	//Signifies that the draw flag is set
 	sf::RectangleShape draw_rec(sf::Vector2f(32, 7));
-	draw_rec.setPosition(width - 34, 28);
+	draw_rec.setPosition(64*RES_MULT - 34, 28);
 	draw_rec.setFillColor(sf::Color::Green);
 
 	// -----------------------------------------------------------
@@ -119,14 +122,7 @@ int main(int argc, char* argv[])
 	auto load_result = myChip8.loadGame(game_path.c_str());
 	appendText(&debugText, "Loaded  " + std::to_string(load_result) + "  bytes to memory");
 
-	std::vector<sf::RectangleShape> screen(64 * 32);
-
-	for (size_t i = 0; i < 64 * 32; i++)
-	{
-		screen[i].setPosition(i % 64 * RES_MULT, i / 64 * RES_MULT);;
-		screen[i].setSize(sf::Vector2f(RES_MULT, RES_MULT));
-		screen[i].setFillColor(sf::Color(BG_COLOR));
-	}
+	createScreen();
 
 	//myChip8.isRunning = false;
 
@@ -228,7 +224,7 @@ int main(int argc, char* argv[])
 
 	//If emulateCycle returns false we need to stop the emulation
 	if ( myChip8.isRunning && 
-		!myChip8.emulateCycle(7) )
+		!myChip8.emulateCycle(6) )
 	{
 		myChip8.stopEmulation();
 	}
@@ -237,14 +233,13 @@ int main(int argc, char* argv[])
 
 	window.clear();
 
+	// Update screen with pixels[] values and draw it
 	// Sacrificing LoC/executable size, for speed
 	if (myChip8.drawFlag)
 	{
-		sf::Color fg_color(FG_COLOR);
-		sf::Color bg_color(BG_COLOR);
-		for (size_t i = 0; i < 64 * 32; i++)
+		for (size_t i = 0; i < screen.size(); i++)
 		{
-			screen[i].setFillColor((mem::pixels[i]) ? fg_color : bg_color);
+			screen[i].setFillColor(mem::pixels[i] ? fg_color : bg_color);
 			window.draw(screen[i]);
 		}
 		if (isDebug) { window.draw(draw_rec); }
@@ -291,5 +286,30 @@ static void updRegText(std::ostringstream* ss, sf::Text* regText)
 		*ss << "V" << i << "="
 			<< std::setw(2) << int(mem::V[i]) % 256 << "\n";
 		replaceText(regText, ss->str());
+	}
+}
+
+void createScreen()
+{
+	for (size_t i = 0; i < 64 * 32; i++)
+	{
+		screen[i].setPosition(i % 64 * RES_MULT, i / 64 * RES_MULT);;
+		screen[i].setSize(sf::Vector2f(RES_MULT, RES_MULT));
+		screen[i].setFillColor(sf::Color(BG_COLOR));
+	}
+}
+
+void resizeScreen(bool isExtended)
+{
+	auto size = isExtended ? 128 * 64 : 64 * 32;
+	auto sizeW = isExtended ? 128 : 64;
+
+	screen.clear();
+	screen.resize(size);
+	for (size_t i = 0; i < size; i++)
+	{
+		screen[i].setPosition(i % sizeW * RES_MULT/2, i / sizeW * RES_MULT/2);
+		screen[i].setSize(sf::Vector2f(RES_MULT/2, RES_MULT/2));
+		screen[i].setFillColor(sf::Color(BG_COLOR));
 	}
 }
