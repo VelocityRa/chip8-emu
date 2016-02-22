@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 
 	//Load a pixely font
 	sf::Font mc_font;
-	if (!mc_font.loadFromFile("C:/Users/Nikos/Documents/Visual Studio 2015/Projects/chip8-emu/resources/fonts/Minecraftia-Regular.ttf"))
+	if (!mc_font.loadFromFile("resources/fonts/Minecraftia-Regular.ttf"))
 	{
 		//Couldn't load font
 		window.close();
