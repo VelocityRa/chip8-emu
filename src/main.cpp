@@ -14,9 +14,9 @@
 #define PAD 3
 
 
-#define FG_COLOR 255, 255, 255
-#define BG_COLOR 0, 40, 102
-
+#define FG_COLOR 215, 235, 245
+#define BG_COLOR 102, 50, 110
+#define DEBUG_COLOR 0, 0, 0
 
 #ifdef _DEBUG
 auto isDebug = true;
@@ -82,9 +82,10 @@ int main(int argc, char* argv[])
 	unsigned short Framerate;
 
 	debugText.setFont(mc_font);
-	debugText.setCharacterSize(12);
+	debugText.setCharacterSize(14);
 	debugText.setPosition(0 + PAD, 12 * 3 + 6 + PAD);
-	debugText.setColor(sf::Color(100, 100, 100));
+	debugText.setColor(sf::Color(DEBUG_COLOR));
+	debugText.setStyle(sf::Text::Style::Bold);
 
 	regText.setFont(mc_font);
 	regText.setCharacterSize(8);
