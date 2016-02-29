@@ -264,20 +264,23 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		pc += 2; break;
 	case 0xD000: // (DXYN) Draws a sprite at coordinate (VX, VY) 
 	{			 // that has a width of 8 pixels and a height of N pixels.
-		unsigned short x = V[(opcode & 0x0F00) >> 8];
-		unsigned short y = V[(opcode & 0x00F0) >> 4];
+		unsigned short x = V[(opcode & 0x0F00) >> 8] & WIDTH_PIXELS-1;
+		unsigned short y = V[(opcode & 0x00F0) >> 4] & HEIGHT_PIXELS-1;
 		unsigned short height = opcode & 0x000F;
 		unsigned short pixel;
-
-		if (x >= WIDTH_PIXELS | y >= HEIGHT_PIXELS ) // Invalid draw position given
+		/*
+		if (x >= WIDTH_PIXELS | y >= HEIGHT_PIXELS) // Invalid draw position given
 		{
 			sprintf_s(buf, 256, "Invalid position, X:%d, Y:%d", x, y);
-			isRunning = false;
+			//isRunning = false;
 		}
 		else
 		{
 			sprintf_s(buf, 256, "Drawing in X:%d, Y:%d, height:%d", x, y, height);
 		}
+		*/
+		sprintf_s(buf, 256, "Drawing in X:%d, Y:%d, height:%d", x, y, height);
+
 		V[0xF] = 0;
 		for (auto yline = 0; yline < height; yline++)
 		{
@@ -292,6 +295,12 @@ bool chip8::decodeOpcode(unsigned short opcode)
 				}
 			}
 		}
+		first2bytes = (last2opcodes & 0xFFFF);
+		second2bytes = (last2opcodes & 0xFFFF0000) >> 16;
+		drawFlag = ((first2bytes==opcode) || (second2bytes == opcode));
+
+		last2opcodes <<= 16;
+		last2opcodes |= opcode;
 
 		drawFlag = true;
 		pc += 2; break;
