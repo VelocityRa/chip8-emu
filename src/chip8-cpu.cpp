@@ -27,7 +27,7 @@ int chip8::initialize()
 	opcode_ss << std::hex << std::setfill('0') << std::uppercase;
 
 	//Load beep sound
-	if (!sound_buffer.loadFromFile("C:/Users/Nikos/Documents/Visual Studio 2015/Projects/chip8-emu/resources/sounds/beep.wav"))
+	if (!sound_buffer.loadFromFile("resources/sounds/beep.wav"))
 	{
 		//Couldn't load sound
 		return -1;
