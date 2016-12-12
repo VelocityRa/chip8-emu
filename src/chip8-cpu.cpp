@@ -365,7 +365,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			pc += 2; goto ret;
 		case 0x001E: // (FX1E) Adds VX to I. VF is set to 1 when there's a carry,
 					 // and to 0 when there isn't
-			if (V[X] > (0xFF - I))
+			if (V[X] > (0xFFF - I))
 			{
 				V[0xF] = 1; //carry
 			}
