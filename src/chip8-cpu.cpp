@@ -102,9 +102,14 @@ bool chip8::emulateCycle(short cycles, bool force)
 	return true;
 }
 
-void chip8::detInfLoop()
+bool chip8::detInfLoop() const
 {
-	appendText(&debugText, "Infinite loop detected, game stopped.");
+	if ((0x1000 | pc) == (mem::memory[pc] << 8 | mem::memory[(pc + 1) % 0x1000]))
+	{
+		appendText(&debugText, "Infinite loop detected, game stopped.");
+		return true;
+	}
+	return false;
 }
 
 bool chip8::decodeOpcode(unsigned short opcode)
@@ -134,11 +139,10 @@ bool chip8::decodeOpcode(unsigned short opcode)
 	case 0x1000: // (1NNN) Jumps to address NNN
 		pc = opcode & 0x0FFF;
 		sprintf_s(buf, 256, "Jump to %03X", pc);
-		if ((0x1000 | pc) == (memory[pc] << 8 | memory[(pc + 1) % 0x1000]) )
+		if (detInfLoop())
 		{
-			detInfLoop();	// Infinite loop detected (game stopped execution)
-			return false;
-		}
+			return false;  // Infinite loop detected (game stopped execution)
+		} 
 		break;
 	case 0x2000: // (2NNN) Calls subroutine at NNN
 		stack[sp++] = pc;
@@ -146,12 +150,16 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		sprintf_s(buf, 256, "CALL subroutine %03X, sp:%d", pc, sp-1);
 		break;
 	case 0x3000: // (3XNN) Skips the next instruction if VX equals NN
-		if (V[(opcode & 0x0F00) >> 8] == (opcode & 0x00FF))
+	{
+		auto X = (opcode & 0x0F00) >> 8;
+		if (V[X] == (opcode & 0x00FF))
 		{
-			sprintf_s(buf, 256, "V%X == %02X, so skip", (opcode & 0x0F00) >> 8, (opcode & 0x00FF));
+			sprintf_s(buf, 256, "V%X == %02X, so skip", X, (opcode & 0x00FF));
 			pc += 2;
-		} else { sprintf_s(buf, 256, "V%X != %02X, so don't skip", (opcode & 0x0F00) >> 8, (opcode & 0x00FF)); }
+		}
+		else { sprintf_s(buf, 256, "V%X != %02X, so don't skip", X, (opcode & 0x00FF)); }
 		pc += 2; break;
+	}
 	case 0x4000: // (4XNN) Skips the next instruction if VX doesn't equal NN
 		if (V[(opcode & 0x0F00) >> 8] != (opcode & 0x00FF))
 		{
@@ -305,52 +313,59 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		pc += 2; break;
 	}
 	case 0xE000:
+	{
+		auto X = (opcode & 0x0F00) >> 8;
+
 		switch (opcode & 0x00FF)
 		{
 		case 0x009E: // (EX9E) Skips the next instruction if the key stored in VX is pressed.
-			if (key[V[(opcode & 0x0F00) >> 8]])
+			if (key[V[X]])
 			{
-				sprintf_s(buf, 256, "Key in V%X is pressed, so skip", (opcode & 0x0F00) >> 8);
-				key[V[(opcode & 0x0F00) >> 8]] = false;
+				sprintf_s(buf, 256, "Key in V%X is pressed, so skip", X);
+				key[V[X]] = false;
 				pc += 2;
-			} else { sprintf_s(buf, 256, "Key in V%X is not pressed, so don't skip", (opcode & 0x0F00) >> 8); }
+			}
+			else { sprintf_s(buf, 256, "Key in V%X is not pressed, so don't skip", X); }
 			pc += 2; break;
 		case 0x00A1: // (EX9E) Skips the next instruction if the key stored in VX isn't pressed.
-			if (!key[V[(opcode & 0x0F00) >> 8]])
+			if (!key[V[X]])
 			{
-				sprintf_s(buf, 256, "Key in V%X is not pressed, so skip", (opcode & 0x0F00) >> 8);
+				sprintf_s(buf, 256, "Key in V%X is not pressed, so skip", X);
 				pc += 2;
-			} else { sprintf_s(buf, 256, "Key in V%X is pressed, so don't skip", (opcode & 0x0F00) >> 8); }
+			}
+			else { sprintf_s(buf, 256, "Key in V%X is pressed, so don't skip", X); }
 			pc += 2; break;
 		default:
 			goto uknown;
 		}
 		break;
+	}
 	case 0xF000:
+	{
+		auto X = (opcode & 0x0F00) >> 8;
+
 		switch (opcode & 0x00FF)
 		{
 		case 0x0007: // (FX07) Sets VX to the value of the delay timer.
-			V[(opcode & 0x0F00) >> 8] = delay_timer;
-			sprintf_s(buf, 256, "V%X = delay_timer = %d", (opcode & 0x0F00) >> 8, delay_timer);
+			V[X] = delay_timer;
+			sprintf_s(buf, 256, "V%X = delay_timer = %d", X, delay_timer);
 			pc += 2; goto ret;
 		case 0x000A: // TODO: (FX0A) A key press is awaited, and then stored in VX.
-			sprintf_s(buf, 256, "Waiting for key to be stored in V%X", (opcode & 0x0F00) >> 8);
+			sprintf_s(buf, 256, "Waiting for key to be stored in V%X", X);
 			waitForKey = true;
 			isRunning = false;
 			goto ret;
 		case 0x0015: // (FX15) Sets the delay timer to VX.
-			sprintf_s(buf, 256, "delay_timer = V%X = %02X", delay_timer, (opcode & 0x0F00) >> 8), \
-															V[(opcode & 0x0F00) >> 8];
-			delay_timer = V[(opcode & 0x0F00) >> 8];
+			sprintf_s(buf, 256, "delay_timer = V%X = %02X", delay_timer, X, V[X]);
+			delay_timer = V[X];
 			pc += 2; goto ret;
 		case 0x0018: // (FX18) Sets the sound timer to VX.
-			sprintf_s(buf, 256, "sound_timer = V%X = %02X", sound_timer, (opcode & 0x0F00) >> 8), \
-															V[(opcode & 0x0F00) >> 8];
-			sound_timer = V[(opcode & 0x0F00) >> 8];
+			sprintf_s(buf, 256, "sound_timer = V%X = %02X", sound_timer, X, V[X]);
+			sound_timer = V[X];
 			pc += 2; goto ret;
 		case 0x001E: // (FX1E) Adds VX to I. VF is set to 1 when there's a carry,
 					 // and to 0 when there isn't
-			if (V[(opcode & 0x0F00) >> 8] > (0xFF - I))
+			if (V[X] > (0xFF - I))
 			{
 				V[0xF] = 1; //carry
 			}
@@ -358,37 +373,35 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			{
 				V[0xF] = 0;
 			}
-			I += V[(opcode & 0x0F00) >> 8];
-			sprintf_s(buf, 256, "I += V%X, carry=%d", (opcode & 0x0F00) >> 8, V[0xF]);
+			I += V[X];
+			sprintf_s(buf, 256, "I += V%X, carry=%d", X, V[0xF]);
 			pc += 2; goto ret;
 		case 0x0029: // (FX29) Sets I to the location of the sprite for the character in VX
 					 // Characters 0 - F(in hexadecimal) are represented by a 4x5 font.
-			I = V[(opcode & 0x0F00) >> 8] * 5;
-			sprintf_s(buf, 256, "I = %03X (loc of sprite for char %X)", I, (opcode & 0x0F00) >> 8);
+			I = V[X] * 5;
+			sprintf_s(buf, 256, "I = %03X (loc of sprite for char %X)", I, X);
 			pc += 2; goto ret;
 		case 0x0033: // (FX33) Stores the binary-coded decimal representation of
 		{			 // VX at the addresses I, I plus 1, and I plus 2
-			unsigned char X = V[(opcode & 0x0F00) >> 8];
-			memory[I] = X / 100;
-			memory[I + 1] = (X / 10) % 10;
-			memory[I + 2] = (X % 100) % 10;
+			auto VX = V[X];
+			memory[I] = VX / 100;
+			memory[I + 1] = VX / 10 % 10;
+			memory[I + 2] = VX % 100 % 10;
 			sprintf_s(buf, 256, "mem[I] = BCD(V%X), VX is %X, so changing memory to %X, %X, %X",
-				X, V[X], memory[I], memory[I+1], memory[I+2]);
+				X, VX, memory[I], memory[I + 1], memory[I + 2]);
 			pc += 2; goto ret;
 		}
 		case 0x0055: // (FX55) Stores V0 to VX in memory starting at address I
 		{
-			unsigned char X = (opcode & 0x0F00) >> 8;
 			for (auto i = 0; i <= X; i++)
 			{
 				memory[I + i] = V[i];
 			}
-			sprintf_s(buf, 256, "Store V0 to V%X starting at I=%03X", (opcode & 0x0F00) >> 8, I);
+			sprintf_s(buf, 256, "Store V0 to V%X starting at I=%03X", X, I);
 			pc += 2; goto ret;
 		}
 		case 0x0065: // (FX65) Fills V0 to VX with values from memory starting at address I
 		{
-			unsigned char X = (opcode & 0x0F00) >> 8;
 			for (auto i = 0; i <= X; i++)
 			{
 				V[i] = memory[I + i];
@@ -399,6 +412,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 		default:
 			goto uknown;
 		}
+	}
 	default:
 		uknown:
 		opcode_ss.str("");

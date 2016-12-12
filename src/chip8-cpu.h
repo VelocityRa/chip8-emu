@@ -48,7 +48,7 @@ public:
 	void keyPress(const unsigned char k);
 	static void keyRelease(const unsigned char k);
 	bool emulateCycle(short cycles = 1, bool force=false);
-	void detInfLoop();
+	bool detInfLoop() const;
 	void stopEmulation();
 
 };
