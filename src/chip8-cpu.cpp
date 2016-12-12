@@ -232,8 +232,7 @@ bool chip8::decodeOpcode(unsigned short opcode)
 			pc += 2; break;
 		case 0x000E: // (8XYE) Shifts VX left by one. 
 					 // VF is set to the value of the most significant bit of VX before the shift
-			V[0xF] = V[(opcode & 0x0F00) >> 8] & 128; // 128 comes from this:
-													  // (1 << (sizeof(unsigned char) * 8 - 1));
+			V[0xF] = (V[(opcode & 0x0F00) >> 8] >> 7) & 1;
 			sprintf_s(buf, 256, "V%X <<= 1, VF=%X", (opcode & 0x0F00) >> 8, V[0xF]);
 			V[(opcode & 0x0F00) >> 8] <<= 1;
 			pc += 2; break;
