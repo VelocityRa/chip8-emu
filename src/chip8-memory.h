@@ -22,6 +22,7 @@ namespace mem
 	extern  bool			key[16];
 
 	//Fontset
-	extern unsigned char	chip8_fontset[80];
+	extern const unsigned char
+							chip8_fontset[80];
 }
 #endif

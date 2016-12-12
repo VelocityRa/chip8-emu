@@ -47,6 +47,7 @@ public:
 	static int  loadGame(const char* name);
 	void keyPress(const unsigned char k);
 	static void keyRelease(const unsigned char k);
+	void advancePC();
 	bool emulateCycle(short cycles = 1, bool force=false);
 	bool detInfLoop() const;
 	void stopEmulation();
